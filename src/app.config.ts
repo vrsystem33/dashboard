@@ -13,12 +13,10 @@ import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import { authReducer } from '@app/core/auth/auth.reducer';
 import { preferencesReducer } from '@app/core/preferences/preferences.reducer';
-import { aiReducer } from '@app/core/ai/ai.reducer';
 import { analyticsReducer } from '@app/core/analytics/analytics.reducer';
 import { subscriptionReducer } from '@app/core/subscription/subscription.reducer';
 import { metaReducers } from '@app/core/app.meta-reducers';
 import { AuthEffects } from '@app/core/auth/auth.effects';
-import { AIEffects } from '@app/core/ai/ai.effects';
 import { AnalyticsEffects } from '@app/core/analytics/analytics.effects';
 import { SubscriptionEffects } from '@app/core/subscription/subscription.effects';
 import { MessageService } from 'primeng/api';
@@ -51,13 +49,12 @@ export const appConfig: ApplicationConfig = {
             {
                 auth: authReducer,
                 preferences: preferencesReducer,
-                ai: aiReducer,
                 analytics: analyticsReducer,
                 subscription: subscriptionReducer
             },
             { metaReducers }
         ),
-        provideEffects([AuthEffects, AIEffects, AnalyticsEffects, SubscriptionEffects]),
+        provideEffects([AuthEffects, AnalyticsEffects, SubscriptionEffects]),
         provideRouterStore(),
         MessageService,
         { provide: LOCALE_ID, useValue: userLocale },
