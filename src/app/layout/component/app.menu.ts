@@ -28,7 +28,7 @@ export class AppMenu {
                         label: 'Cadastros',
                         icon: 'pi pi-fw pi-id-card',
                         items: [
-                            { label: 'Customers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'Customers', icon: 'pi pi-fw pi-users', routerLink: ['/customers'] },
                             { label: 'Suppliers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
                             { label: 'Carriers', icon: 'pi pi-fw pi-truck', routerLink: ['/orders'] },
                             { label: 'Products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
