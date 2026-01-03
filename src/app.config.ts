@@ -1,5 +1,5 @@
-import { ApplicationConfig, LOCALE_ID } from '@angular/core';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { ApplicationConfig, LOCALE_ID, importProvidersFrom } from '@angular/core';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
 import Aura from '@primeuix/themes/aura';
@@ -21,9 +21,18 @@ import { AnalyticsEffects } from '@app/core/analytics/analytics.effects';
 import { SubscriptionEffects } from '@app/core/subscription/subscription.effects';
 import { MessageService } from 'primeng/api';
 import { loadLocale } from '@app/utils/loadLocale';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-const userLocale = navigator.language || 'en-US'; // detecta do browser
-loadLocale(userLocale);
+export function httpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, '/i18n/', '.json');
+}
+
+const storedLanguage = localStorage.getItem('__lang__');
+const defaultLanguage = 'pt-BR';
+const initialLanguage = storedLanguage || defaultLanguage;
+
+loadLocale(initialLanguage);
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -57,6 +66,16 @@ export const appConfig: ApplicationConfig = {
         provideEffects([AuthEffects, AnalyticsEffects, SubscriptionEffects]),
         provideRouterStore(),
         MessageService,
-        { provide: LOCALE_ID, useValue: userLocale },
+        { provide: LOCALE_ID, useValue: initialLanguage },
+        importProvidersFrom(
+            TranslateModule.forRoot({
+                defaultLanguage,
+                loader: {
+                    provide: TranslateLoader,
+                    useFactory: httpLoaderFactory,
+                    deps: [HttpClient]
+                }
+            })
+        ),
     ]
 };

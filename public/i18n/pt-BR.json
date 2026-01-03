@@ -1,0 +1,31 @@
+{
+    "menu": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "registrations": "Cadastros",
+        "customers": "Clientes",
+        "suppliers": "Fornecedores",
+        "carriers": "Transportadoras",
+        "products": "Produtos",
+        "issuers": "Emissores",
+        "paymentMethods": "Formas de Pagamento",
+        "users": "Usuários",
+        "sales": "Vendas",
+        "counter": "Balcão",
+        "pdv": "PDV",
+        "tax": "Fiscal",
+        "nfe": "NFe",
+        "taxMonitor": "Monitor Fiscal",
+        "finance": "Financeiro",
+        "cashier": "Caixa",
+        "accountsReceivable": "Contas a Receber",
+        "accountsPayable": "Contas a Pagar",
+        "reports": "Relatórios",
+        "reportsCashier": "Caixa",
+        "reportsReceivables": "Contas a Receber",
+        "reportsPayables": "Contas a Pagar",
+        "reportsCustomers": "Clientes",
+        "reportsProducts": "Produtos",
+        "reportsSales": "Vendas"
+    }
+}

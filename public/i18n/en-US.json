@@ -1,0 +1,31 @@
+{
+    "menu": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "registrations": "Registrations",
+        "customers": "Customers",
+        "suppliers": "Suppliers",
+        "carriers": "Carriers",
+        "products": "Products",
+        "issuers": "Issuers",
+        "paymentMethods": "Payment Methods",
+        "users": "Users",
+        "sales": "Sales",
+        "counter": "Counter",
+        "pdv": "POS",
+        "tax": "Tax",
+        "nfe": "NFe",
+        "taxMonitor": "Tax Monitor",
+        "finance": "Finance",
+        "cashier": "Cashier",
+        "accountsReceivable": "Accounts Receivable",
+        "accountsPayable": "Accounts Payable",
+        "reports": "Reports",
+        "reportsCashier": "Cashier",
+        "reportsReceivables": "Accounts Receivable",
+        "reportsPayables": "Accounts Payable",
+        "reportsCustomers": "Customers",
+        "reportsProducts": "Products",
+        "reportsSales": "Sales"
+    }
+}
