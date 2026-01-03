@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { I18nService } from '@app/core/i18n/i18n.service';
 
 @Component({
     selector: 'app-menu',
@@ -18,60 +19,62 @@ import { AppMenuitem } from './app.menuitem';
 export class AppMenu {
     model: MenuItem[] = [];
 
+    constructor(private readonly i18nService: I18nService) {}
+
     ngOnInit() {
         this.model = [
             {
-                label: 'Home',
+                label: 'menu.home',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                    { label: 'menu.dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
                     {
-                        label: 'Cadastros',
+                        label: 'menu.registrations',
                         icon: 'pi pi-fw pi-id-card',
                         items: [
-                            { label: 'Customers', icon: 'pi pi-fw pi-users', routerLink: ['/customers'] },
-                            { label: 'Suppliers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
-                            { label: 'Carriers', icon: 'pi pi-fw pi-truck', routerLink: ['/orders'] },
-                            { label: 'Products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
-                            { label: 'Issuers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
-                            { label: 'Payment Methods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
-                            { label: 'Users', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'menu.customers', icon: 'pi pi-fw pi-users', routerLink: ['/customers'] },
+                            { label: 'menu.suppliers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'menu.carriers', icon: 'pi pi-fw pi-truck', routerLink: ['/orders'] },
+                            { label: 'menu.products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
+                            { label: 'menu.issuers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'menu.paymentMethods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
+                            { label: 'menu.users', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
                         ]
                     },
                     {
-                        label: 'Vendas',
+                        label: 'menu.sales',
                         icon: 'pi pi-fw pi-shopping-bag',
                         items: [
-                            { label: 'Counter', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/orders'] },
-                            { label: 'PDV', icon: 'pi pi-fw pi-shop', routerLink: ['/orders'] },
+                            { label: 'menu.counter', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/orders'] },
+                            { label: 'menu.pdv', icon: 'pi pi-fw pi-shop', routerLink: ['/orders'] },
                         ]
                     },
                     {
-                        label: 'Fiscal',
+                        label: 'menu.tax',
                         icon: 'pi pi-fw pi-file',
                         items: [
-                            { label: 'NFe', icon: 'pi pi-fw pi-file', routerLink: ['/orders'] },
-                            { label: 'Monitor Fiscal', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'menu.nfe', icon: 'pi pi-fw pi-file', routerLink: ['/orders'] },
+                            { label: 'menu.taxMonitor', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
                         ]
                     },
                     {
-                        label: 'Financeiro',
+                        label: 'menu.finance',
                         icon: 'pi pi-fw pi-wallet',
                         items: [
-                            { label: 'Caixa', icon: 'pi pi-fw pi-briefcase', routerLink: ['/orders'] },
-                            { label: 'Contas a Receber', icon: 'pi pi-fw pi-money-bill', routerLink: ['/orders'] },
-                            { label: 'Contas a Pagar', icon: 'pi pi-fw pi-calendar-times', routerLink: ['/orders'] },
+                            { label: 'menu.cashier', icon: 'pi pi-fw pi-briefcase', routerLink: ['/orders'] },
+                            { label: 'menu.accountsReceivable', icon: 'pi pi-fw pi-money-bill', routerLink: ['/orders'] },
+                            { label: 'menu.accountsPayable', icon: 'pi pi-fw pi-calendar-times', routerLink: ['/orders'] },
                         ]
                     },
                     {
-                        label: 'Relatórios',
+                        label: 'menu.reports',
                         icon: 'pi pi-fw pi-chart-bar',
                         items: [
-                            { label: 'Caixa', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
-                            { label: 'Contas a Receber', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
-                            { label: 'Contas a Pagar', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
-                            { label: 'Clientes', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
-                            { label: 'Produtos', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
-                            { label: 'Vendas', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'menu.reportsCashier', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'menu.reportsReceivables', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'menu.reportsPayables', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'menu.reportsCustomers', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'menu.reportsProducts', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'menu.reportsSales', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
                         ]
                     },
                     // { label: 'Assistants', icon: 'pi pi-fw pi-android', routerLink: ['/assistants'] },

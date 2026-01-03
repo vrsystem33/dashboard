@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,8 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { AuthFacade } from '@app/core/auth/auth.facade';
+import { I18nService } from '@app/core/i18n/i18n.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-topbar',
@@ -47,6 +49,10 @@ import { AuthFacade } from '@app/core/auth/auth.facade';
             <div class="layout-config-menu">
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
+                </button>
+                <button type="button" class="layout-topbar-action" (click)="toggleLanguage()">
+                    <i class="pi pi-globe mr-2"></i>
+                    <span class="uppercase">{{ languageLabel }}</span>
                 </button>
                 <div class="relative">
                     <button
@@ -103,7 +109,23 @@ import { AuthFacade } from '@app/core/auth/auth.facade';
 export class AppTopbar {
     items!: MenuItem[];
 
-    constructor(public layoutService: LayoutService, private auth: AuthFacade, private router: Router) {}
+    languageLabel: string;
+
+    private readonly destroyRef = inject(DestroyRef);
+
+    constructor(
+        public layoutService: LayoutService,
+        private auth: AuthFacade,
+        private router: Router,
+        private i18nService: I18nService
+    ) {
+        const currentLanguage = this.i18nService.getCurrentLanguage();
+        this.languageLabel = this.getToggleLabel(currentLanguage);
+
+        this.i18nService.languageChanges$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((language) => (this.languageLabel = this.getToggleLabel(language)));
+    }
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
@@ -120,5 +142,13 @@ export class AppTopbar {
     goSettings() {
         console.log('Vai para Settings...');
         this.router.navigate(['/settings']);
+    }
+
+    toggleLanguage() {
+        this.i18nService.toggleLanguage();
+    }
+
+    private getToggleLabel(language: string): string {
+        return language === 'pt-BR' ? 'EN' : 'PT';
     }
 }
