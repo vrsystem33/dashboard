@@ -272,7 +272,24 @@ export class AppConfigurator {
 
     primaryColors = computed<SurfacesType[]>(() => {
         const presetPalette = presets[this.layoutService.layoutConfig().preset as KeyOfType<typeof presets>].primitive;
-        const colors = ['emerald', 'green', 'lime', 'orange', 'amber', 'yellow', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
+        const colors: string[] = [
+            'emerald',
+            'green',
+            'lime',
+            'orange',
+            'amber',
+            'yellow',
+            'teal',
+            'cyan',
+            'sky',
+            'blue',
+            'indigo',
+            'violet',
+            'purple',
+            'fuchsia',
+            'pink',
+            'rose'
+        ];
         const palettes: SurfacesType[] = [{ name: 'noir', palette: {} }];
 
         colors.forEach((color) => {

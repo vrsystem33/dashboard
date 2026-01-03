@@ -138,7 +138,7 @@ export class CustomersPage {
         email: String(payload.email ?? ''),
         phone: payload.phone,
         status: (payload.status ?? 'active') as any,
-        orders: payload.orders ?? 0,
+        sales: payload.sales ?? 0,
         totalSpent: payload.totalSpent ?? 0
       }).pipe(take(1)).subscribe(() => {
         this.msg.add({ severity: 'success', summary: 'Cliente criado' });

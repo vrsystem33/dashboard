@@ -12,7 +12,7 @@ export interface Customer {
   email: string;
   phone?: string;
   status: CustomerStatus;
-  orders: number;
+  sales: number;
   totalSpent: number; // in BRL
 }
 
@@ -35,11 +35,11 @@ export class CustomersService {
     return of(value).pipe(delay(ms));
   }
 
-  create(payload: Omit<Customer, 'id' | 'orders' | 'totalSpent'> & Partial<Pick<Customer,'orders'|'totalSpent'>>): Observable<Customer> {
+  create(payload: Omit<Customer, 'id' | 'sales' | 'totalSpent'> & Partial<Pick<Customer,'sales'|'totalSpent'>>): Observable<Customer> {
     this._loading$.next(true);
     const customer: Customer = {
       id: crypto.randomUUID(),
-      orders: payload.orders ?? 0,
+      sales: payload.sales ?? 0,
       totalSpent: payload.totalSpent ?? 0,
       ...payload
     } as Customer;

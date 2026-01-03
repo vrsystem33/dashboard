@@ -58,9 +58,9 @@ import { DataViewModule } from 'primeng/dataview';
               Status
               <p-sortIcon field="status" />
             </th>
-            <th pSortableColumn="orders">
-              Pedidos
-              <p-sortIcon field="orders" />
+            <th pSortableColumn="sales">
+              Vendas
+              <p-sortIcon field="sales" />
             </th>
             <th pSortableColumn="totalSpent">
               Total Gasto
@@ -84,7 +84,7 @@ import { DataViewModule } from 'primeng/dataview';
                 [value]="c.status === 'active' ? 'Ativo' : 'Inativo'
               "></p-tag>
             </td>
-            <td>{{ c.orders }}</td>
+            <td>{{ c.sales }}</td>
             <td>{{ c.totalSpent | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
             <td class="flex gap-2">
               <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
@@ -112,7 +112,7 @@ import { DataViewModule } from 'primeng/dataview';
                   <p-tag [severity]="c.status === 'active' ? 'success' : 'danger'" [value]="c.status === 'active' ? 'Ativo' : 'Inativo'"></p-tag>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span>{{ c.orders }} pedidos</span>
+                  <span>{{ c.sales }} pedidos</span>
                   <span>{{ c.totalSpent | currency:'BRL':'symbol-narrow':'1.2-2' }}</span>
                 </div>
                 <div class="flex gap-2 justify-end">
@@ -167,7 +167,7 @@ export class CustomersTableComponent {
           <td>${c.email}</td>
           <td>${c.phone ?? '-'}</td>
           <td>${c.status === 'active' ? 'Ativo' : 'Inativo'}</td>
-          <td style="text-align:right">${c.orders}</td>
+          <td style="text-align:right">${c.sales}</td>
           <td style="text-align:right">${new Intl.NumberFormat(this.locale, { style: 'currency', currency: this.currencyCode }).format(c.totalSpent)}</td>
         </tr>
       `).join('');

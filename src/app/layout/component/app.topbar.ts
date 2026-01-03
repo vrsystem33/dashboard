@@ -39,7 +39,7 @@ import { AuthFacade } from '@app/core/auth/auth.facade';
                         />
                     </g>
                 </svg>
-                <span>TALKAI</span>
+                <span>VR System</span>
             </a>
         </div>
 
@@ -79,14 +79,14 @@ import { AuthFacade } from '@app/core/auth/auth.facade';
 
             <div class="layout-topbar-menu hidden lg:block" #menuPanel>
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
+                    <!-- <button type="button" class="layout-topbar-action">
                         <i class="pi pi-calendar"></i>
                         <span>Calendar</span>
                     </button>
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-inbox"></i>
                         <span>Messages</span>
-                    </button>
+                    </button> -->
                     <button type="button" class="layout-topbar-action" (click)="goSettings(); closeMenu(menuPanel)">
                         <i class="pi pi-user"></i>
                         <span>Profile</span>

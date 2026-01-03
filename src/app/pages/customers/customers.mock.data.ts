@@ -44,7 +44,7 @@ export function generateMockCustomers(count: number = 50): Customer[] {
     return `${username}@${domain}`;
   };
 
-  const generateOrders = (): number => {
+  const generatesales = (): number => {
     // Distribuição: maioria com poucos pedidos, alguns com muitos
     const rand = Math.random();
     if (rand < 0.6) return Math.floor(Math.random() * 10); // 0-9 pedidos (60%)
@@ -52,15 +52,15 @@ export function generateMockCustomers(count: number = 50): Customer[] {
     return Math.floor(Math.random() * 100) + 50; // 50-149 pedidos (10%)
   };
 
-  const generateTotalSpent = (orders: number): number => {
+  const generateTotalSpent = (sales: number): number => {
     const avgOrderValue = Math.random() * 200 + 50; // R$ 50-250 por pedido
-    const total = orders * avgOrderValue;
+    const total = sales * avgOrderValue;
     return Math.round(total * 100) / 100; // Arredonda para 2 casas decimais
   };
 
-  const generateStatus = (orders: number): CustomerStatus => {
+  const generateStatus = (sales: number): CustomerStatus => {
     // Clientes com 0 pedidos têm maior chance de serem inativos
-    if (orders === 0) return Math.random() < 0.7 ? 'inactive' : 'active';
+    if (sales === 0) return Math.random() < 0.7 ? 'inactive' : 'active';
     // Clientes com pedidos são majoritariamente ativos
     return Math.random() < 0.8 ? 'active' : 'inactive';
   };
@@ -73,9 +73,9 @@ export function generateMockCustomers(count: number = 50): Customer[] {
     const name = `${firstName} ${lastName}`;
     const email = generateEmail(firstName, lastName);
     const phone = Math.random() < 0.9 ? generatePhone() : ''; // 10% sem telefone
-    const orders = generateOrders();
-    const totalSpent = generateTotalSpent(orders);
-    const status = generateStatus(orders);
+    const sales = generatesales();
+    const totalSpent = generateTotalSpent(sales);
+    const status = generateStatus(sales);
 
     customers.push({
       id: crypto.randomUUID(),
@@ -83,7 +83,7 @@ export function generateMockCustomers(count: number = 50): Customer[] {
       email,
       phone,
       status,
-      orders,
+      sales,
       totalSpent
     });
   }
@@ -99,7 +99,7 @@ export const mockCustomers: Customer[] = [
     email: 'joao.silva@empresa.com',
     phone: '(11) 98888-0001',
     status: 'active',
-    orders: 12,
+    sales: 12,
     totalSpent: 1499.90
   },
   {
@@ -108,7 +108,7 @@ export const mockCustomers: Customer[] = [
     email: 'maria.souza@hotmail.com',
     phone: '(21) 97777-0002',
     status: 'inactive',
-    orders: 3,
+    sales: 3,
     totalSpent: 299.00
   },
   {
@@ -117,7 +117,7 @@ export const mockCustomers: Customer[] = [
     email: 'carlos.pereira@gmail.com',
     phone: '(31) 96666-0003',
     status: 'active',
-    orders: 25,
+    sales: 25,
     totalSpent: 3890.50
   },
   {
@@ -126,7 +126,7 @@ export const mockCustomers: Customer[] = [
     email: 'ana.oliveira@outlook.com',
     phone: '(41) 95555-0004',
     status: 'active',
-    orders: 8,
+    sales: 8,
     totalSpent: 1200.75
   },
   {
@@ -135,7 +135,7 @@ export const mockCustomers: Customer[] = [
     email: 'pedro.santos@yahoo.com',
     phone: '(51) 94444-0005',
     status: 'inactive',
-    orders: 1,
+    sales: 1,
     totalSpent: 150.00
   },
   ...generateMockCustomers(45) // Gera mais 45 clientes aleatórios

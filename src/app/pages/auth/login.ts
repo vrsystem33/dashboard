@@ -116,6 +116,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 export class Login {
     private store = inject(Store);
     private toast = inject(ToastService);
+    private errorTimeout?: any;
 
     email = '';
     password = '';
@@ -123,17 +124,29 @@ export class Login {
 
     status$ = this.store.select(selectAuthStatus);
     error$ = this.store.select(selectAuthError);
-    messageError?: string;
+    messageError?: string | null = null;
 
     signIn() {
         this.messageError = undefined;
 
         if (!this.email?.trim() || !this.password?.trim()) {
-            this.messageError = 'Email and password are required';
+            this.showError('Email and password are required');
             // this.toast.error('Erro', 'Email and password are required', 'top-left');
             return;
         }
 
         this.store.dispatch(loginRequested({ login: this.email, password: this.password }));
+    }
+
+    showError(message: string, timeout = 5000) {
+        this.messageError = message;
+
+        if (this.errorTimeout) {
+            clearTimeout(this.errorTimeout);
+        }
+
+        this.errorTimeout = setTimeout(() => {
+            this.messageError = null;
+        }, timeout);
     }
 }

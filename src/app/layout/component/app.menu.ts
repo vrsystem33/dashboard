@@ -24,11 +24,60 @@ export class AppMenu {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                    { label: 'Customers', icon: 'pi pi-fw pi-users', routerLink: ['/customers'] },
-                    { label: 'Orders', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/orders'] },
-                    { label: 'Assistants', icon: 'pi pi-fw pi-android', routerLink: ['/assistants'] },
+                    {
+                        label: 'Cadastros',
+                        icon: 'pi pi-fw pi-id-card',
+                        items: [
+                            { label: 'Customers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'Suppliers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'Carriers', icon: 'pi pi-fw pi-truck', routerLink: ['/orders'] },
+                            { label: 'Products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
+                            { label: 'Issuers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                            { label: 'Payment Methods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
+                            { label: 'Users', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                        ]
+                    },
+                    {
+                        label: 'Vendas',
+                        icon: 'pi pi-fw pi-shopping-bag',
+                        items: [
+                            { label: 'Counter', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/orders'] },
+                            { label: 'PDV', icon: 'pi pi-fw pi-shop', routerLink: ['/orders'] },
+                        ]
+                    },
+                    {
+                        label: 'Fiscal',
+                        icon: 'pi pi-fw pi-file',
+                        items: [
+                            { label: 'NFe', icon: 'pi pi-fw pi-file', routerLink: ['/orders'] },
+                            { label: 'Monitor Fiscal', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
+                        ]
+                    },
+                    {
+                        label: 'Financeiro',
+                        icon: 'pi pi-fw pi-wallet',
+                        items: [
+                            { label: 'Caixa', icon: 'pi pi-fw pi-briefcase', routerLink: ['/orders'] },
+                            { label: 'Contas a Receber', icon: 'pi pi-fw pi-money-bill', routerLink: ['/orders'] },
+                            { label: 'Contas a Pagar', icon: 'pi pi-fw pi-calendar-times', routerLink: ['/orders'] },
+                        ]
+                    },
+                    {
+                        label: 'Relatórios',
+                        icon: 'pi pi-fw pi-chart-bar',
+                        items: [
+                            { label: 'Caixa', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'Contas a Receber', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'Contas a Pagar', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'Clientes', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'Produtos', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                            { label: 'Vendas', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/orders'] },
+                        ]
+                    },
+                    // { label: 'Assistants', icon: 'pi pi-fw pi-android', routerLink: ['/assistants'] },
                 ]
             },
+            /*
             {
                 label: 'UI Components',
                 items: [
@@ -156,7 +205,7 @@ export class AppMenu {
                         target: '_blank'
                     }
                 ]
-            }
+            }*/
         ];
     }
 }
