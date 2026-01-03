@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
-import { I18nService } from '@app/core/i18n/i18n.service';
 
 @Component({
     selector: 'app-menu',
@@ -18,8 +17,6 @@ import { I18nService } from '@app/core/i18n/i18n.service';
 })
 export class AppMenu {
     model: MenuItem[] = [];
-
-    constructor(private readonly i18nService: I18nService) {}
 
     ngOnInit() {
         this.model = [
