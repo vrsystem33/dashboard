@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
   Input,
   OnChanges,
@@ -13,11 +12,10 @@ import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { CustomersService, Customer } from '../customers.service';
 import { SelectModule } from 'primeng/select';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputGroupModule } from 'primeng/inputgroup';
+import { PanelModule } from 'primeng/panel';
+import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from '../customers.models';
+import { CustomerCategory } from '../customer-categories.service';
 
 @Component({
   selector: 'app-customer-dialog',
@@ -29,9 +27,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
     InputTextModule,
     ButtonModule,
     SelectModule,
-    IconFieldModule,
-    InputIconModule,
-    InputGroupModule,
+    PanelModule,
   ],
   template: `
     <p-dialog
@@ -50,7 +46,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
             <label for="name" class="block font-bold mb-2">Nome completo</label>
             <input id="name" type="text" pInputText formControlName="name" class="w-full" placeholder="Digite o nome" />
             <small class="text-red-500" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
-              O nome é obrigatório e deve ter pelo menos 2 caracteres.
+              O nome é obrigatório e deve ter pelo menos 3 caracteres.
             </small>
           </div>
 
@@ -68,6 +64,23 @@ import { InputGroupModule } from 'primeng/inputgroup';
           </div>
 
           <div>
+            <label for="category" class="block font-bold mb-2">Categoria</label>
+            <p-select
+              inputId="category"
+              formControlName="category_id"
+              [options]="categories"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Selecione a categoria"
+              class="w-full"
+              appendTo="body"
+            />
+            <small class="text-red-500" *ngIf="form.get('category_id')?.invalid && form.get('category_id')?.touched">
+              A categoria é obrigatória.
+            </small>
+          </div>
+
+          <div>
             <label for="status" class="block font-bold mb-2">Status</label>
             <p-select
               inputId="status"
@@ -80,11 +93,92 @@ import { InputGroupModule } from 'primeng/inputgroup';
               appendTo="body"
             />
           </div>
+
+          <p-panel header="Mais informações" toggleable [collapsed]="showMoreInfo">
+            <div class="flex flex-col gap-4">
+
+              <fieldset class="border border-surface rounded-md p-4">
+                <legend class="px-2 text-sm font-semibold text-primary">
+                  Informações pessoais
+                </legend>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="last_name">Sobrenome</label>
+                    <input id="last_name" type="text" pInputText formControlName="last_name" class="w-full" />
+                  </div>
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="nickname">Apelido</label>
+                    <input id="nickname" type="text" pInputText formControlName="nickname" class="w-full" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold mb-2" for="identification">Documento</label>
+                    <input id="identification" type="text" pInputText formControlName="identification" class="w-full" />
+                  </div>
+
+                  <div>
+                    <label class="block font-bold mb-2" for="secondary_phone">Telefone secundário</label>
+                    <input id="secondary_phone" type="text" pInputText formControlName="secondary_phone" class="w-full" />
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="border border-surface rounded-md p-4">
+                <legend class="px-2 text-sm font-semibold text-primary">
+                  Endereço
+                </legend>
+
+                <div class="md:mb-4 sm:mb-1">
+                  <label class="block font-bold mb-2" for="postal_code">CEP</label>
+                  <input id="postal_code" type="text" pInputText formControlName="postal_code" class="w-full" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="address">Endereço</label>
+                    <input id="address" type="text" pInputText formControlName="address" class="w-full" />
+                  </div>
+
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="number">Número</label>
+                    <input id="number" type="text" pInputText formControlName="number" class="w-full" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="neighborhood">Bairro</label>
+                    <input id="neighborhood" type="text" pInputText formControlName="neighborhood" class="w-full" />
+                  </div>
+
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="complement">Complemento</label>
+                    <input id="complement" type="text" pInputText formControlName="complement" class="w-full" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold mb-2" for="city">Cidade</label>
+                    <input id="city" type="text" pInputText formControlName="city" class="w-full" />
+                  </div>
+
+                  <div>
+                    <label class="block font-bold mb-2" for="state">Estado</label>
+                    <input id="state" type="text" pInputText formControlName="state" class="w-full" />
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </p-panel>
         </form>
       </ng-template>
 
       <ng-template #footer>
-        <p-button label="Cancelar" icon="pi pi-times" text (click)="cancel.emit()" />
+        <p-button label="Cancelar" icon="pi pi-times" text (click)="onCloseForm()" />
         <p-button label="Salvar" icon="pi pi-check" (click)="onSave()" [disabled]="form.invalid" />
       </ng-template>
     </p-dialog>
@@ -93,8 +187,9 @@ import { InputGroupModule } from 'primeng/inputgroup';
 })
 export class CustomerDialogComponent implements OnChanges {
   @Input() visible = false;
-  @Input() customer: Customer | null = null;
-  @Output() save = new EventEmitter<Partial<Customer>>();
+  @Input() customer: CustomerRow | null = null;
+  @Input() categories: CustomerCategory[] = [];
+  @Output() save = new EventEmitter<CustomerCreateRequestDto | CustomerUpdateRequestDto>();
   @Output() cancel = new EventEmitter<void>();
 
   statuses = [
@@ -102,14 +197,28 @@ export class CustomerDialogComponent implements OnChanges {
     { name: 'Inativo', code: false }
   ];
 
+  public showMoreInfo: boolean = true;
+
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
-      status: [true, Validators.required]
+      category_id: [null, Validators.required],
+      status: [true, Validators.required],
+      last_name: [''],
+      nickname: [''],
+      identification: [''],
+      secondary_phone: [''],
+      postal_code: [''],
+      address: [''],
+      number: [''],
+      neighborhood: [''],
+      complement: [''],
+      city: [''],
+      state: [''],
     });
   }
 
@@ -120,21 +229,92 @@ export class CustomerDialogComponent implements OnChanges {
           name: this.customer.name,
           email: this.customer.email,
           phone: this.customer.phone ?? '',
-          status: this.customer.status
+          category_id: this.customer.category_id ?? null,
+          status: this.customer.status,
+          last_name: this.customer.last_name ?? '',
+          nickname: this.customer.nickname ?? '',
+          identification: this.customer.identification ?? '',
+          secondary_phone: this.customer.secondary_phone ?? '',
+          postal_code: this.customer.postal_code ?? '',
+          address: this.customer.address ?? '',
+          number: this.customer.number ?? '',
+          neighborhood: this.customer.neighborhood ?? '',
+          complement: this.customer.complement ?? '',
+          city: this.customer.city ?? '',
+          state: this.customer.state ?? '',
         });
       } else {
         this.form.reset({
           name: '',
           email: '',
           phone: '',
-          status: 'active'
+          category_id: null,
+          status: true,
+          last_name: '',
+          nickname: '',
+          identification: '',
+          secondary_phone: '',
+          postal_code: '',
+          address: '',
+          number: '',
+          neighborhood: '',
+          complement: '',
+          city: '',
+          state: '',
         });
       }
     }
   }
 
-  onSave() {
-    if (this.form.invalid) return;
-    this.save.emit(this.form.getRawValue());
+  onSave(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload = this.buildPayload();
+
+    this.save.emit(payload);
+
+    // ✅ RESET PROFISSIONAL
+    this.form.reset({
+      name: '',
+      category_id: null,
+    });
+
+    // fecha seções extras
+    this.showMoreInfo = true;
+
+    // evita estados "dirty" residuais
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+  }
+
+  onCloseForm() {
+    this.form.reset({
+      name: '',
+      category_id: null,
+    });
+
+    this.showMoreInfo = true;
+
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+
+    this.cancel.emit()
+  }
+
+  private buildPayload(): CustomerCreateRequestDto | CustomerUpdateRequestDto {
+    const value = this.form.getRawValue();
+    const normalizedEntries = Object.entries(value).reduce<Record<string, unknown>>((acc, [key, v]) => {
+      acc[key] = typeof v === 'string' ? v.trim() || null : v;
+      return acc;
+    }, {});
+
+    const cleaned = Object.fromEntries(
+      Object.entries(normalizedEntries).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+    ) as Record<string, any>;
+
+    return cleaned as CustomerCreateRequestDto | CustomerUpdateRequestDto;
   }
 }
