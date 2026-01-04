@@ -28,7 +28,7 @@ import { CustomerRow } from '../customers.models';
         [rowsPerPageOptions]="[10,20,50]"
         [loading]="loading"
         [lazy]="false"
-        class="shadow-sm rounded-lg overflow-hidden"
+        class="shadow-sm rounded-lg overflow-hidden customers-table"
         [tableStyle]="{'min-width':'800px'}"
         responsiveLayout="scroll"
         [globalFilterFields]="['name', 'email', 'phone', 'status']"
@@ -66,7 +66,7 @@ import { CustomerRow } from '../customers.models';
               Total Gasto
               <p-sortIcon field="totalSpent" />
             </th>
-            <th>Ações</th>
+            <th class="actions">Ações</th>
           </tr>
         </ng-template>
 
@@ -81,12 +81,12 @@ import { CustomerRow } from '../customers.models';
             <td>
               <p-tag
                 [severity]="c.status ? 'success' : 'danger'"
-                [value]="c.status ? 'Ativo' : 'Inativo'"
+                [value]="c.status ? 'Ativo' : 'Inativo'
               "></p-tag>
             </td>
             <td>{{ c.totalSales ?? 0 }}</td>
             <td>{{ (c.totalSpent ?? 0) | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
-            <td class="flex gap-2">
+            <td class="actions">
               <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
               <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(c)"></button>
             </td>
@@ -125,6 +125,49 @@ import { CustomerRow } from '../customers.models';
         </ng-template>
       </p-dataview>
     </div>
+  `,
+  styles: `
+    /* Alinhamento vertical consistente */
+    .customers-table {
+
+      .p-datatable-thead > tr > th,
+      .p-datatable-tbody > tr > td {
+        vertical-align: middle;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+
+      /* Header: alinhar texto + sort icon */
+      .p-datatable-thead > tr > th {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      /* Evita que o sort icon empurre o texto */
+      .p-sortable-column {
+        justify-content: flex-start;
+      }
+
+      /* Tags (Status) */
+      .p-tag {
+        line-height: 1;
+        padding: 0.25rem 0.5rem;
+      }
+
+      /* Coluna de ações */
+      td.actions,
+      th.actions {
+        text-align: center;
+      }
+
+      td.actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

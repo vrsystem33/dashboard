@@ -94,74 +94,91 @@ import { CustomerCategory } from '../customer-categories.service';
             />
           </div>
 
-          <p-panel header="Mais informações" toggleable [collapsed]="true">
+          <p-panel header="Mais informações" toggleable [collapsed]="showMoreInfo">
             <div class="flex flex-col gap-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block font-bold mb-2" for="last_name">Sobrenome</label>
-                  <input id="last_name" type="text" pInputText formControlName="last_name" class="w-full" />
-                </div>
-                <div>
-                  <label class="block font-bold mb-2" for="nickname">Apelido</label>
-                  <input id="nickname" type="text" pInputText formControlName="nickname" class="w-full" />
-                </div>
-              </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block font-bold mb-2" for="identification">Documento</label>
-                  <input id="identification" type="text" pInputText formControlName="identification" class="w-full" />
-                </div>
-                <div>
-                  <label class="block font-bold mb-2" for="secondary_phone">Telefone secundário</label>
-                  <input id="secondary_phone" type="text" pInputText formControlName="secondary_phone" class="w-full" />
-                </div>
-              </div>
+              <fieldset class="border border-surface rounded-md p-4">
+                <legend class="px-2 text-sm font-semibold text-primary">
+                  Informações pessoais
+                </legend>
 
-              <div>
-                <label class="block font-bold mb-2" for="postal_code">CEP</label>
-                <input id="postal_code" type="text" pInputText formControlName="postal_code" class="w-full" />
-              </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="last_name">Sobrenome</label>
+                    <input id="last_name" type="text" pInputText formControlName="last_name" class="w-full" />
+                  </div>
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="nickname">Apelido</label>
+                    <input id="nickname" type="text" pInputText formControlName="nickname" class="w-full" />
+                  </div>
+                </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block font-bold mb-2" for="address">Endereço</label>
-                  <input id="address" type="text" pInputText formControlName="address" class="w-full" />
-                </div>
-                <div>
-                  <label class="block font-bold mb-2" for="number">Número</label>
-                  <input id="number" type="text" pInputText formControlName="number" class="w-full" />
-                </div>
-              </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold mb-2" for="identification">Documento</label>
+                    <input id="identification" type="text" pInputText formControlName="identification" class="w-full" />
+                  </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block font-bold mb-2" for="neighborhood">Bairro</label>
-                  <input id="neighborhood" type="text" pInputText formControlName="neighborhood" class="w-full" />
+                  <div>
+                    <label class="block font-bold mb-2" for="secondary_phone">Telefone secundário</label>
+                    <input id="secondary_phone" type="text" pInputText formControlName="secondary_phone" class="w-full" />
+                  </div>
                 </div>
-                <div>
-                  <label class="block font-bold mb-2" for="complement">Complemento</label>
-                  <input id="complement" type="text" pInputText formControlName="complement" class="w-full" />
-                </div>
-              </div>
+              </fieldset>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block font-bold mb-2" for="city">Cidade</label>
-                  <input id="city" type="text" pInputText formControlName="city" class="w-full" />
+              <fieldset class="border border-surface rounded-md p-4">
+                <legend class="px-2 text-sm font-semibold text-primary">
+                  Endereço
+                </legend>
+
+                <div class="md:mb-4 sm:mb-1">
+                  <label class="block font-bold mb-2" for="postal_code">CEP</label>
+                  <input id="postal_code" type="text" pInputText formControlName="postal_code" class="w-full" />
                 </div>
-                <div>
-                  <label class="block font-bold mb-2" for="state">Estado</label>
-                  <input id="state" type="text" pInputText formControlName="state" class="w-full" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="address">Endereço</label>
+                    <input id="address" type="text" pInputText formControlName="address" class="w-full" />
+                  </div>
+
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="number">Número</label>
+                    <input id="number" type="text" pInputText formControlName="number" class="w-full" />
+                  </div>
                 </div>
-              </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="neighborhood">Bairro</label>
+                    <input id="neighborhood" type="text" pInputText formControlName="neighborhood" class="w-full" />
+                  </div>
+
+                  <div class="md:mb-4 sm:mb-1">
+                    <label class="block font-bold mb-2" for="complement">Complemento</label>
+                    <input id="complement" type="text" pInputText formControlName="complement" class="w-full" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold mb-2" for="city">Cidade</label>
+                    <input id="city" type="text" pInputText formControlName="city" class="w-full" />
+                  </div>
+
+                  <div>
+                    <label class="block font-bold mb-2" for="state">Estado</label>
+                    <input id="state" type="text" pInputText formControlName="state" class="w-full" />
+                  </div>
+                </div>
+              </fieldset>
             </div>
           </p-panel>
         </form>
       </ng-template>
 
       <ng-template #footer>
-        <p-button label="Cancelar" icon="pi pi-times" text (click)="cancel.emit()" />
+        <p-button label="Cancelar" icon="pi pi-times" text (click)="onCloseForm()" />
         <p-button label="Salvar" icon="pi pi-check" (click)="onSave()" [disabled]="form.invalid" />
       </ng-template>
     </p-dialog>
@@ -179,6 +196,8 @@ export class CustomerDialogComponent implements OnChanges {
     { name: 'Ativo', code: true },
     { name: 'Inativo', code: false }
   ];
+
+  public showMoreInfo: boolean = true;
 
   form: FormGroup;
 
@@ -247,11 +266,42 @@ export class CustomerDialogComponent implements OnChanges {
     }
   }
 
-  onSave() {
-    if (this.form.invalid) return;
+  onSave(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const payload = this.buildPayload();
+
     this.save.emit(payload);
+
+    // ✅ RESET PROFISSIONAL
+    this.form.reset({
+      name: '',
+      category_id: null,
+    });
+
+    // fecha seções extras
+    this.showMoreInfo = true;
+
+    // evita estados "dirty" residuais
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+  }
+
+  onCloseForm() {
+    this.form.reset({
+      name: '',
+      category_id: null,
+    });
+
+    this.showMoreInfo = true;
+
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+
+    this.cancel.emit()
   }
 
   private buildPayload(): CustomerCreateRequestDto | CustomerUpdateRequestDto {
@@ -261,6 +311,10 @@ export class CustomerDialogComponent implements OnChanges {
       return acc;
     }, {});
 
-    return normalizedEntries as CustomerCreateRequestDto | CustomerUpdateRequestDto;
+    const cleaned = Object.fromEntries(
+      Object.entries(normalizedEntries).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+    ) as Record<string, any>;
+
+    return cleaned as CustomerCreateRequestDto | CustomerUpdateRequestDto;
   }
 }
