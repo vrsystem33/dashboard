@@ -3,8 +3,8 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { CustomersService, Customer } from '../customers.service';
 import { DataViewModule } from 'primeng/dataview';
+import { CustomerRow } from '../customers.models';
 
 @Component({
   selector: 'app-customers-table',
@@ -22,7 +22,7 @@ import { DataViewModule } from 'primeng/dataview';
       <p-table
         #dt
         [value]="customers"
-        dataKey="id"
+        dataKey="uuid"
         [paginator]="true"
         [rows]="10"
         [rowsPerPageOptions]="[10,20,50]"
@@ -58,9 +58,9 @@ import { DataViewModule } from 'primeng/dataview';
               Status
               <p-sortIcon field="status" />
             </th>
-            <th pSortableColumn="sales">
+            <th pSortableColumn="totalSales">
               Vendas
-              <p-sortIcon field="sales" />
+              <p-sortIcon field="totalSales" />
             </th>
             <th pSortableColumn="totalSpent">
               Total Gasto
@@ -80,12 +80,12 @@ import { DataViewModule } from 'primeng/dataview';
             <td>{{ c.phone || '-' }}</td>
             <td>
               <p-tag
-                [severity]="c.status === 'active' ? 'success' : 'danger'"
-                [value]="c.status === 'active' ? 'Ativo' : 'Inativo'
+                [severity]="c.status ? 'success' : 'danger'"
+                [value]="c.status ? 'Ativo' : 'Inativo'"
               "></p-tag>
             </td>
-            <td>{{ c.sales }}</td>
-            <td>{{ c.totalSpent | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
+            <td>{{ c.totalSales ?? 0 }}</td>
+            <td>{{ (c.totalSpent ?? 0) | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
             <td class="flex gap-2">
               <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
               <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(c)"></button>
@@ -109,11 +109,11 @@ import { DataViewModule } from 'primeng/dataview';
                     <div class="text-sm text-muted">{{ c.email }}</div>
                     <div class="text-sm text-muted">{{ c.phone || '-' }}</div>
                   </div>
-                  <p-tag [severity]="c.status === 'active' ? 'success' : 'danger'" [value]="c.status === 'active' ? 'Ativo' : 'Inativo'"></p-tag>
+                  <p-tag [severity]="c.status ? 'success' : 'danger'" [value]="c.status ? 'Ativo' : 'Inativo'"></p-tag>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span>{{ c.sales }} pedidos</span>
-                  <span>{{ c.totalSpent | currency:'BRL':'symbol-narrow':'1.2-2' }}</span>
+                  <span>{{ c.totalSales ?? 0 }} pedidos</span>
+                  <span>{{ (c.totalSpent ?? 0) | currency:'BRL':'symbol-narrow':'1.2-2' }}</span>
                 </div>
                 <div class="flex gap-2 justify-end">
                   <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
@@ -129,16 +129,16 @@ import { DataViewModule } from 'primeng/dataview';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomersTableComponent {
-  @ViewChild('dt') dt: any;
+  @ViewChild('dt') dt?: Table;
 
-  @Input() customers: Customer[] = [];
+  @Input() customers: CustomerRow[] = [];
   @Input() loading = false;
 
-  @Output() edit = new EventEmitter<Customer>();
-  @Output() delete = new EventEmitter<Customer>();
-  @Output() selectionChange = new EventEmitter<Customer[]>();
+  @Output() edit = new EventEmitter<CustomerRow>();
+  @Output() delete = new EventEmitter<CustomerRow>();
+  @Output() selectionChange = new EventEmitter<CustomerRow[]>();
 
-  selected: Customer[] = [];
+  selected: CustomerRow[] = [];
   currencyCode = 'BRL';
   mobile = signal(false);
 
@@ -166,9 +166,9 @@ export class CustomersTableComponent {
           <td>${c.name}</td>
           <td>${c.email}</td>
           <td>${c.phone ?? '-'}</td>
-          <td>${c.status === 'active' ? 'Ativo' : 'Inativo'}</td>
-          <td style="text-align:right">${c.sales}</td>
-          <td style="text-align:right">${new Intl.NumberFormat(this.locale, { style: 'currency', currency: this.currencyCode }).format(c.totalSpent)}</td>
+          <td>${c.status ? 'Ativo' : 'Inativo'}</td>
+          <td style="text-align:right">${c.totalSales ?? 0}</td>
+          <td style="text-align:right">${new Intl.NumberFormat(this.locale, { style: 'currency', currency: this.currencyCode }).format(c.totalSpent ?? 0)}</td>
         </tr>
       `).join('');
 

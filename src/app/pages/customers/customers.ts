@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -7,10 +7,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 
-import { CustomersService, Customer } from './customers.service';
+import { CustomersService } from './customers.service';
 import { CustomersTableComponent } from './components/customers-table';
 import { CustomerDialogComponent } from './components/customer-dialog';
 import { CustomerFiltersComponent } from './components/customer-filters';
+import { CustomerCategoriesService, CustomerCategory } from './customer-categories.service';
+import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from './customers.models';
 
 @Component({
   selector: 'app-customers',
@@ -56,6 +58,7 @@ import { CustomerFiltersComponent } from './components/customer-filters';
       <app-customer-dialog
         [visible]="dialogOpen()"
         [customer]="editing()"
+        [categories]="categories()"
         (cancel)="closeDialog()"
         (save)="save($event)">
       </app-customer-dialog>
@@ -71,28 +74,34 @@ import { CustomerFiltersComponent } from './components/customer-filters';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MessageService, ConfirmationService]
 })
-export class CustomersPage {
+export class CustomersPage implements OnInit {
   @ViewChild('customersTable') customersTable!: CustomersTableComponent;
 
   readonly search = signal<string>('');
   readonly dialogOpen = signal<boolean>(false);
-  readonly editing = signal<Customer | null>(null);
+  readonly editing = signal<CustomerRow | null>(null);
 
-  readonly customers = signal<Customer[]>([]);
+  readonly customers = signal<CustomerRow[]>([]);
   readonly loading = signal<boolean>(false);
-  readonly selection = signal<Customer[]>([]);
+  readonly selection = signal<CustomerRow[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
-  selectedItens!: any[] | null;
-  customer!: Customer;
+  readonly categories = signal<CustomerCategory[]>([]);
 
   constructor(
     private service: CustomersService,
+    private categoriesService: CustomerCategoriesService,
     private confirmationService: ConfirmationService,
     private msg: MessageService
   ) {
     this.service.customers$.subscribe(this.customers.set);
     this.service.loading$.subscribe(this.loading.set);
+    this.categoriesService.categories$.subscribe(this.categories.set);
+  }
+
+  ngOnInit(): void {
+    this.service.load().pipe(take(1)).subscribe();
+    this.categoriesService.load().pipe(take(1)).subscribe();
   }
 
   readonly filtered = computed(() => {
@@ -107,7 +116,7 @@ export class CustomersPage {
     );
   });
 
-  onSelectionChange(rows: Customer[]) {
+  onSelectionChange(rows: CustomerRow[]) {
     this.selection.set(rows ?? []);
   }
 
@@ -116,7 +125,7 @@ export class CustomersPage {
     this.dialogOpen.set(true);
   }
 
-  openEdit(c: Customer) {
+  openEdit(c: CustomerRow) {
     this.editing.set(c);
     this.dialogOpen.set(true);
   }
@@ -125,50 +134,44 @@ export class CustomersPage {
     this.dialogOpen.set(false);
   }
 
-  save(payload: Partial<Customer>) {
+  save(payload: CustomerCreateRequestDto | CustomerUpdateRequestDto) {
     const isEdit = !!this.editing();
-    if (isEdit && this.editing()?.id) {
-      this.service.update(this.editing()!.id, payload).pipe(take(1)).subscribe(() => {
+    if (isEdit && this.editing()?.uuid) {
+      this.service.update(this.editing()!.uuid, payload).pipe(take(1)).subscribe(() => {
         this.msg.add({ severity: 'success', summary: 'Cliente atualizado' });
         this.dialogOpen.set(false);
+        this.service.load().pipe(take(1)).subscribe();
       });
     } else {
-      this.service.create({
-        name: String(payload.name ?? ''),
-        email: String(payload.email ?? ''),
-        phone: payload.phone,
-        status: (payload.status ?? 'active') as any,
-        sales: payload.sales ?? 0,
-        totalSpent: payload.totalSpent ?? 0
-      }).pipe(take(1)).subscribe(() => {
+      this.service.create(payload as CustomerCreateRequestDto).pipe(take(1)).subscribe(() => {
         this.msg.add({ severity: 'success', summary: 'Cliente criado' });
         this.dialogOpen.set(false);
+        this.service.load().pipe(take(1)).subscribe();
       });
     }
   }
 
-  confirmDelete(c: Customer) {
-    console.log('teste')
+  confirmDelete(c: CustomerRow) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.service.remove(c.id).pipe(take(1)).subscribe(() => {
+        this.service.remove(c.uuid).pipe(take(1)).subscribe(() => {
           this.msg.add({ severity: 'success', summary: 'Cliente removido' });
+          this.service.load().pipe(take(1)).subscribe();
         });
       }
     });
   }
 
   onDeleteSelected() {
-    console.log('teste2')
     this.confirmationService.confirm({
       message: `Are you sure you want to delete the ${this.selection().length} selected items?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        const ids = this.selection().map(s => s.id);
+        const ids = this.selection().map(s => s.uuid);
 
         if (!ids.length) return;
 
@@ -176,6 +179,7 @@ export class CustomersPage {
           this.msg.add({ severity: 'success', summary: `${ids.length} cliente(s) removido(s)` });
           this.selection.set([]);
           if (this.customersTable) this.customersTable.clearSelection();
+          this.service.load().pipe(take(1)).subscribe();
         });
       }
     });

@@ -1,91 +1,72 @@
-import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { mockCustomers } from './customers.mock.data';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, Observable, forkJoin, of } from 'rxjs';
+import { finalize, map, tap } from 'rxjs/operators';
+import { BaseService } from 'src/app/services/base.service';
+import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from './customers.models';
+import { CustomerListItemDto, toCustomerRow } from './customers.mappers';
 
-
-export interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  status: true | false;
-  sales: number;
-  totalSpent: number; // in BRL
-}
-
-/**
- * CustomersService
- * - Mock service with in-memory store (can be replaced by HTTP easily)
- * - Exposes reactive streams for list and loading
- * - Methods return Observables to mimic async/http behavior
- */
 @Injectable({ providedIn: 'root' })
-export class CustomersService {
+export class CustomersService extends BaseService {
   private readonly _loading$ = new BehaviorSubject<boolean>(false);
   readonly loading$ = this._loading$.asObservable();
 
-  private readonly _customers$ = new BehaviorSubject<Customer[]>(mockCustomers);
+  private readonly _customers$ = new BehaviorSubject<CustomerRow[]>([]);
   readonly customers$ = this._customers$.asObservable();
 
-  /** Simulate latency */
-  private simulate<T>(value: T, ms = 400): Observable<T> {
-    return of(value).pipe(delay(ms));
+  constructor(http: HttpClient) {
+    super(http);
   }
 
-  create(payload: Omit<Customer, 'id' | 'sales' | 'totalSpent'> & Partial<Pick<Customer,'sales'|'totalSpent'>>): Observable<Customer> {
+  load(params?: Record<string, string | number | boolean | undefined | null>): Observable<CustomerRow[]> {
     this._loading$.next(true);
-    const customer: Customer = {
-      id: crypto.randomUUID(),
-      sales: payload.sales ?? 0,
-      totalSpent: payload.totalSpent ?? 0,
-      ...payload
-    } as Customer;
-    const list = [customer, ...this._customers$.value];
-    return this.simulate(customer).pipe(
-      map((c) => {
-        this._customers$.next(list);
-        this._loading$.next(false);
-        return c;
-      })
+    const httpParams = new HttpParams({ fromObject: this.buildParams(params) });
+
+    return this.get<CustomerListItemDto[]>('/customers', { params: httpParams }).pipe(
+      map(list => (list ?? []).map(toCustomerRow)),
+      tap(rows => this._customers$.next(rows)),
+      finalize(() => this._loading$.next(false))
     );
   }
 
-  update(id: string, patch: Partial<Customer>): Observable<Customer | undefined> {
+  create(payload: CustomerCreateRequestDto): Observable<unknown> {
     this._loading$.next(true);
-    const list = this._customers$.value.map((c) => (c.id === id ? { ...c, ...patch } : c));
-    const updated = list.find((c) => c.id === id);
-    return this.simulate(updated).pipe(
-      map((c) => {
-        this._customers$.next(list);
-        this._loading$.next(false);
-        return c;
-      })
+    return this.post<unknown>('/customers', payload).pipe(
+      finalize(() => this._loading$.next(false))
     );
   }
 
-  remove(id: string): Observable<boolean> {
+  update(uuid: string, payload: CustomerUpdateRequestDto): Observable<unknown> {
     this._loading$.next(true);
-    const list = this._customers$.value.filter((c) => c.id !== id);
-    return this.simulate(true).pipe(
-      map((ok) => {
-        this._customers$.next(list);
-        this._loading$.next(false);
-        return ok;
-      })
+    return this.put<unknown>(`/customers/${uuid}`, payload).pipe(
+      finalize(() => this._loading$.next(false))
     );
   }
 
-  removeMany(ids: string[]) {
+  remove(uuid: string): Observable<unknown> {
     this._loading$.next(true);
-    const set = new Set(ids);
-    const next = this._customers$.value.filter(c => !set.has(c.id));
-    return of(true).pipe(
-      delay(400),
-      map(() => {
-        this._customers$.next(next);
-        this._loading$.next(false);
-      })
+    return this.delete<unknown>(`/customers/${uuid}`).pipe(
+      finalize(() => this._loading$.next(false))
     );
+  }
+
+  removeMany(uuids: string[]): Observable<unknown> {
+    if (!uuids.length) return of(null);
+    this._loading$.next(true);
+    const deletions = uuids.map(id => this.delete<unknown>(`/customers/${id}`));
+
+    return forkJoin(deletions).pipe(
+      finalize(() => this._loading$.next(false))
+    );
+  }
+
+  private buildParams(params?: Record<string, string | number | boolean | undefined | null>): Record<string, string> {
+    if (!params) return {};
+
+    return Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => {
+      if (value === undefined || value === null) return acc;
+      acc[key] = String(value);
+      return acc;
+    }, {});
   }
 }
