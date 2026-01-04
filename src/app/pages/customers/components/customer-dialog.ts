@@ -13,7 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { CustomersService, Customer, CustomerStatus } from '../customers.service';
+import { CustomersService, Customer } from '../customers.service';
 import { SelectModule } from 'primeng/select';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -98,8 +98,8 @@ export class CustomerDialogComponent implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   statuses = [
-    { name: 'Ativo', code: 'active' as CustomerStatus },
-    { name: 'Inativo', code: 'inactive' as CustomerStatus }
+    { name: 'Ativo', code: true },
+    { name: 'Inativo', code: false }
   ];
 
   form: FormGroup;
@@ -109,7 +109,7 @@ export class CustomerDialogComponent implements OnChanges {
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
-      status: ['active' as CustomerStatus, Validators.required]
+      status: [true, Validators.required]
     });
   }
 

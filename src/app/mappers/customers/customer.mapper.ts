@@ -1,8 +1,8 @@
-import { Cliente } from '@app/models/clientes/cliente.model';
-import { ClienteResponseDto } from '@app/dto/clientes/cliente-response.dto';
-import { ClienteCreateRequestDto, ClienteUpdateRequestDto } from '@app/dto/clientes/cliente-request.dto';
+import { Customer } from '@app/models/customers/customer.model';
+import { CustomerResponseDto } from '@app/dto/customers/customer-response.dto';
+import { CustomerCreateRequestDto, CustomerUpdateRequestDto } from '@app/dto/customers/customer-request.dto';
 
-export const toCliente = (dto: ClienteResponseDto): Cliente => ({
+export const toCustomer = (dto: CustomerResponseDto): Customer => ({
   uuid: dto.uuid,
   empresaId: dto.empresa_id,
   name: dto.nome,
@@ -17,7 +17,7 @@ export const toCliente = (dto: ClienteResponseDto): Cliente => ({
 });
 
 // Em caso de enviar ao backend
-export const toCreateClienteDto = (m: Cliente): ClienteCreateRequestDto => ({
+export const toCreateCustomerDto = (m: Customer): CustomerCreateRequestDto => ({
   empresa_id: m.empresaId,
   nome: m.name,
   email: m.email,
@@ -28,7 +28,7 @@ export const toCreateClienteDto = (m: Cliente): ClienteCreateRequestDto => ({
   status: m.active,
 });
 
-export const toUpdateClienteDto = (m: Partial<Cliente>): ClienteUpdateRequestDto => ({
+export const toUpdateCustomerDto = (m: Partial<Customer>): CustomerUpdateRequestDto => ({
   nome: m.name,
   email: m.email,
   telefone: m.phone,

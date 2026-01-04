@@ -3,15 +3,13 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { mockCustomers } from './customers.mock.data';
 
-/** Domain model */
-export type CustomerStatus = 'active' | 'inactive';
 
 export interface Customer {
   id: string;
   name: string;
   email: string;
   phone?: string;
-  status: CustomerStatus;
+  status: true | false;
   sales: number;
   totalSpent: number; // in BRL
 }

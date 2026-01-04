@@ -1,13 +1,17 @@
-export interface Cliente {
+export interface Customer {
   uuid: string;
   empresaId: string;
   name?: string;
   email?: string;
   phone?: string;
+  secondary_phone?: string;
+  status: boolean;
   birthDate?: Date;
-  language?: string;
-  country?: string;
-  active: boolean;
   createdAt: Date;
   updatedAt?: Date;
 }
+
+/*Algo a se pensar no futuro
+language?: string;
+country?: string;
+*/

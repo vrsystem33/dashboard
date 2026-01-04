@@ -1,4 +1,3 @@
-// store/analytics/analytics.actions.ts
 import { createAction, props } from '@ngrx/store';
 
 export const initStream = createAction('[Analytics] Init Stream');
