@@ -14,6 +14,8 @@ export class CustomersService extends BaseService {
   private readonly _customers$ = new BehaviorSubject<CustomerRow[]>([]);
   readonly customers$ = this._customers$.asObservable();
 
+  private readonly resource: string = '/customers';
+
   constructor(http: HttpClient) {
     super(http);
   }
@@ -22,30 +24,36 @@ export class CustomersService extends BaseService {
     this._loading$.next(true);
     const httpParams = new HttpParams({ fromObject: this.buildParams(params) });
 
-    return this.get<CustomerListItemDto[]>('/customers', { params: httpParams }).pipe(
+    return this.get<CustomerListItemDto[]>(`${this.resource}`, { params: httpParams }).pipe(
       map(list => (list ?? []).map(toCustomerRow)),
       tap(rows => this._customers$.next(rows)),
       finalize(() => this._loading$.next(false))
     );
   }
 
+  getById(uuid: string): Observable<CustomerRow> {
+    return this.get<CustomerListItemDto>(`${this.resource}/${uuid}`).pipe(
+      map(toCustomerRow)
+    );
+  }
+
   create(payload: CustomerCreateRequestDto): Observable<unknown> {
     this._loading$.next(true);
-    return this.post<unknown>('/customers', payload).pipe(
+    return this.post<unknown>(`${this.resource}`, payload).pipe(
       finalize(() => this._loading$.next(false))
     );
   }
 
   update(uuid: string, payload: CustomerUpdateRequestDto): Observable<unknown> {
     this._loading$.next(true);
-    return this.put<unknown>(`/customers/${uuid}`, payload).pipe(
+    return this.put<unknown>(`${this.resource}/${uuid}`, payload).pipe(
       finalize(() => this._loading$.next(false))
     );
   }
 
   remove(uuid: string): Observable<unknown> {
     this._loading$.next(true);
-    return this.delete<unknown>(`/customers/${uuid}`).pipe(
+    return this.delete<unknown>(`${this.resource}/${uuid}`).pipe(
       finalize(() => this._loading$.next(false))
     );
   }
@@ -67,7 +75,7 @@ export class CustomersService extends BaseService {
       message: string;
       deleted: number;
     }>(
-      '/customers/bulk-delete',
+      `${this.resource}/bulk-delete`,
       {uuids}
     ).pipe(
       finalize(() => this._loading$.next(false))

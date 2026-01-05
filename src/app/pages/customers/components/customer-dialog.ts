@@ -276,21 +276,27 @@ export class CustomerDialogComponent implements OnChanges {
 
     this.save.emit(payload);
 
-    // ✅ RESET PROFISSIONAL
-    this.form.reset({
-      name: '',
-      category_id: null,
-    });
+    if (!this.customer) {
+      // ✅ RESET PROFISSIONAL
+      this.form.reset({
+        name: '',
+        category_id: null,
+      });
 
-    // fecha seções extras
-    this.showMoreInfo = true;
+      // fecha seções extras
+      this.showMoreInfo = true;
 
-    // evita estados "dirty" residuais
-    this.form.markAsPristine();
-    this.form.markAsUntouched();
+      // evita estados "dirty" residuais
+      this.form.markAsPristine();
+      this.form.markAsUntouched();
+    }
   }
 
   onCloseForm() {
+    if (this.customer) {
+      return this.cancel.emit()
+    }
+
     this.form.reset({
       name: '',
       category_id: null,
