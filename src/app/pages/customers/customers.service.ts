@@ -50,6 +50,30 @@ export class CustomersService extends BaseService {
     );
   }
 
+  removeMany(uuids: string[]): Observable<{
+    message: string;
+    deleted: number;
+  }> {
+    if (!uuids.length) {
+      return of({
+        message: 'Nenhum cliente selecionado',
+        deleted: 0,
+      });
+    }
+
+    this._loading$.next(true);
+
+    return this.delete<{
+      message: string;
+      deleted: number;
+    }>(
+      '/customers/bulk-delete',
+      {uuids}
+    ).pipe(
+      finalize(() => this._loading$.next(false))
+    );
+  }
+  /*
   removeMany(uuids: string[]): Observable<unknown> {
     if (!uuids.length) return of(null);
     this._loading$.next(true);
@@ -59,6 +83,7 @@ export class CustomersService extends BaseService {
       finalize(() => this._loading$.next(false))
     );
   }
+  */
 
   private buildParams(params?: Record<string, string | number | boolean | undefined | null>): Record<string, string> {
     if (!params) return {};

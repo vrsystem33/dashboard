@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 
 import { CustomersService } from './customers.service';
@@ -13,6 +13,7 @@ import { CustomerDialogComponent } from './components/customer-dialog';
 import { CustomerFiltersComponent } from './components/customer-filters';
 import { CustomerCategoriesService, CustomerCategory } from './customer-categories.service';
 import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from './customers.models';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
   selector: 'app-customers',
@@ -72,7 +73,7 @@ import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from 
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MessageService, ConfirmationService]
+  providers: [ConfirmationService]
 })
 export class CustomersPage implements OnInit {
   @ViewChild('customersTable') customersTable!: CustomersTableComponent;
@@ -83,7 +84,7 @@ export class CustomersPage implements OnInit {
 
   readonly customers = signal<CustomerRow[]>([]);
   readonly loading = signal<boolean>(false);
-  readonly selection = signal<CustomerRow[]>([]);
+  readonly selection = signal<string[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
   readonly categories = signal<CustomerCategory[]>([]);
@@ -92,7 +93,7 @@ export class CustomersPage implements OnInit {
     private service: CustomersService,
     private categoriesService: CustomerCategoriesService,
     private confirmationService: ConfirmationService,
-    private msg: MessageService
+    private toast: ToastService
   ) {
     this.service.customers$.subscribe(this.customers.set);
     this.service.loading$.subscribe(this.loading.set);
@@ -116,7 +117,7 @@ export class CustomersPage implements OnInit {
     );
   });
 
-  onSelectionChange(rows: CustomerRow[]) {
+  onSelectionChange(rows: string[]) {
     this.selection.set(rows ?? []);
   }
 
@@ -138,13 +139,13 @@ export class CustomersPage implements OnInit {
     const isEdit = !!this.editing();
     if (isEdit && this.editing()?.uuid) {
       this.service.update(this.editing()!.uuid, payload).pipe(take(1)).subscribe(() => {
-        this.msg.add({ severity: 'success', summary: 'Cliente atualizado' });
+        this.toast.success('Sucesso', 'Cliente atualizado');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
     } else {
       this.service.create(payload as CustomerCreateRequestDto).pipe(take(1)).subscribe(() => {
-        this.msg.add({ severity: 'success', summary: 'Cliente criado' });
+        this.toast.success('Sucesso', 'Cliente criado');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
@@ -158,7 +159,7 @@ export class CustomersPage implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.service.remove(c.uuid).pipe(take(1)).subscribe(() => {
-          this.msg.add({ severity: 'success', summary: 'Cliente removido' });
+          this.toast.success('Sucesso', 'Cliente removido');
           this.service.load().pipe(take(1)).subscribe();
         });
       }
@@ -171,12 +172,12 @@ export class CustomersPage implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        const ids = this.selection().map(s => s.uuid);
+        const ids = this.selection();
 
         if (!ids.length) return;
 
         this.service.removeMany(ids).pipe(take(1)).subscribe(() => {
-          this.msg.add({ severity: 'success', summary: `${ids.length} cliente(s) removido(s)` });
+          this.toast.success('Sucesso', `${ids.length} cliente(s) removido(s)`);
           this.selection.set([]);
           if (this.customersTable) this.customersTable.clearSelection();
           this.service.load().pipe(take(1)).subscribe();

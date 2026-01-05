@@ -34,7 +34,7 @@ import { CustomerRow } from '../customers.models';
         [globalFilterFields]="['name', 'email', 'phone', 'status']"
         [(selection)]="selected"
         selectionMode="multiple"
-        (selectionChange)="selectionChange.emit(selected)"
+        (selectionChange)="onSelectionChange($event)"
         *ngIf="!mobile()"
       >
         <ng-template pTemplate="header">
@@ -179,9 +179,9 @@ export class CustomersTableComponent {
 
   @Output() edit = new EventEmitter<CustomerRow>();
   @Output() delete = new EventEmitter<CustomerRow>();
-  @Output() selectionChange = new EventEmitter<CustomerRow[]>();
+  @Output() selectionChange = new EventEmitter<string[]>();
 
-  selected: CustomerRow[] = [];
+  selected: string[] = [];
   currencyCode = 'BRL';
   mobile = signal(false);
 
@@ -192,6 +192,11 @@ export class CustomersTableComponent {
 
   private checkMobile() {
     this.mobile.set(window.innerWidth < 768);
+  }
+
+  onSelectionChange(selected: any[]) {
+    const uuids = selected.map(c => c.uuid);
+    this.selectionChange.emit(uuids);
   }
 
   exportCSV() {

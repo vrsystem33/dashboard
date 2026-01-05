@@ -17,7 +17,7 @@ export class ToastService {
     severity: ToastMessageOptions['severity'],
     summary: string,
     detail: string,
-    position: ToastPosition = 'top-right'
+    position: ToastPosition = 'top-center'
   ) {
     this.messageService.add({
       severity,

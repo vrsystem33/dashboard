@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -9,20 +9,41 @@ export abstract class BaseService {
 
   constructor(protected http: HttpClient) {}
 
-  protected get<T>(url: string, options?: object): Observable<T> {
+  protected get<T>(
+    url: string,
+    options?: object
+  ): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${url}`, options);
   }
 
-  protected post<T>(url: string, body: unknown, options?: object): Observable<T> {
+  protected post<T>(
+    url: string,
+    body: unknown,
+    options?: object
+  ): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}${url}`, body, options);
   }
 
-  protected put<T>(url: string, body: unknown, options?: object): Observable<T> {
+  protected put<T>(
+    url: string,
+    body: unknown,
+    options?: object
+  ): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${url}`, body, options);
   }
 
-  protected delete<T>(url: string, options?: object): Observable<T> {
-    return this.http.delete<T>(`${this.baseUrl}${url}`, options);
+  protected delete<T>(
+    url: string,
+    body?: any,
+    options?: {
+      headers?: HttpHeaders | Record<string, string | string[]>;
+      params?: HttpParams | Record<string, string | number | boolean>;
+    }
+  ): Observable<T> {
+    return this.http.delete<T>(`${this.baseUrl}${url}`, {
+      ...options,
+      body
+    });
   }
 
   /**
