@@ -132,19 +132,19 @@ import { CustomerCategory } from '../customer-categories.service';
                 </legend>
 
                 <div class="md:mb-4 sm:mb-1">
-                  <label class="block font-bold mb-2" for="postal_code">CEP</label>
-                  <input id="postal_code" type="text" pInputText formControlName="postal_code" class="w-full" />
+                  <label class="block font-bold mb-2" for="address">Endereço</label>
+                  <input id="address" type="text" pInputText formControlName="address" class="w-full" />
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="md:mb-4 sm:mb-1">
-                    <label class="block font-bold mb-2" for="address">Endereço</label>
-                    <input id="address" type="text" pInputText formControlName="address" class="w-full" />
+                    <label class="block font-bold mb-2" for="number">Número</label>
+                    <input id="number" type="text" pInputText formControlName="number" class="w-full" />
                   </div>
 
                   <div class="md:mb-4 sm:mb-1">
-                    <label class="block font-bold mb-2" for="number">Número</label>
-                    <input id="number" type="text" pInputText formControlName="number" class="w-full" />
+                    <label class="block font-bold mb-2" for="postal_code">CEP</label>
+                    <input id="postal_code" type="text" pInputText formControlName="postal_code" class="w-full" />
                   </div>
                 </div>
 

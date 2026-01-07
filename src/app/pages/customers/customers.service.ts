@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, forkJoin, of } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/services/base.service';
 import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from './customers.models';
-import { CustomerListItemDto, toCustomerRow } from './customers.mappers';
+import { CustomerItemDto, CustomerListItemDto, toCustomer, toCustomerRow } from './customers.mappers';
 
 @Injectable({ providedIn: 'root' })
 export class CustomersService extends BaseService {
@@ -32,8 +32,10 @@ export class CustomersService extends BaseService {
   }
 
   getById(uuid: string): Observable<CustomerRow> {
-    return this.get<CustomerListItemDto>(`${this.resource}/${uuid}`).pipe(
-      map(toCustomerRow)
+    this._loading$.next(true);
+    return this.get<CustomerItemDto>(`${this.resource}/${uuid}`).pipe(
+      map(toCustomer),
+      finalize(() => this._loading$.next(false))
     );
   }
 

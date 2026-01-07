@@ -127,8 +127,15 @@ export class CustomersPage implements OnInit {
   }
 
   openEdit(c: CustomerRow) {
-    this.editing.set(c);
-    this.dialogOpen.set(true);
+    this.service.getById(c.uuid).pipe(take(1)).subscribe({
+      next: (customer) => {
+        this.editing.set(customer);
+        this.dialogOpen.set(true);
+      },
+      error: (e) => {
+        this.toast.error('Error', e);
+      },
+    });
   }
 
   closeDialog() {
