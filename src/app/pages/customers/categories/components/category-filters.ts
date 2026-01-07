@@ -10,7 +10,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { Menu, MenuModule } from 'primeng/menu';
 
 @Component({
-  selector: 'app-customer-filters',
+  selector: 'app-category-filters',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,7 +20,7 @@ import { Menu, MenuModule } from 'primeng/menu';
     IconFieldModule,
     InputIconModule,
     ToolbarModule,
-    MenuModule,
+    MenuModule
   ],
   template: `
     <p-toolbar class="mb-6 md:flex" *ngIf="!mobile()">
@@ -31,20 +31,17 @@ import { Menu, MenuModule } from 'primeng/menu';
             pInputText
             [(ngModel)]="search"
             (ngModelChange)="searchChange.emit($event)"
-            placeholder="Buscar por nome, e-mail ou telefone"
+            placeholder="Buscar por nome ou descrição"
             class="w-full md:w-80"
           />
           <p-inputicon class="pi pi-search" />
         </p-iconfield>
 
-        <button pButton class="mr-4" label="Novo Cliente" icon="pi pi-plus" (click)="create.emit()"></button>
-
-        <button pButton type="button" label="Todas Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
+        <button pButton class="mr-4" label="Nova Categoria" icon="pi pi-plus" (click)="create.emit()"></button>
+        <button pButton type="button" label="Clientes" icon="pi pi-users" class="p-button-outlined shrink-0" (click)="this.openCustomers()"></button>
       </ng-template>
 
       <ng-template #end>
-        <p-button label="Export CSV" class="mr-4" icon="pi pi-upload" severity="secondary" (onClick)="exportCsv.emit()" />
-        <p-button label="Export PDF" class="mr-4" icon="pi pi-file-pdf" severity="secondary" (onClick)="exportPdf.emit()" />
         <p-button severity="danger" label="Delete" icon="pi pi-trash" outlined
           (onClick)="deleteSelected.emit()"
           [disabled]="!selectedCount" />
@@ -58,7 +55,7 @@ import { Menu, MenuModule } from 'primeng/menu';
           pInputText
           [(ngModel)]="search"
           (ngModelChange)="searchChange.emit($event)"
-          placeholder="Buscar cliente"
+          placeholder="Buscar categoria"
           class="w-full"
         />
         <p-inputicon class="pi pi-search" />
@@ -87,44 +84,22 @@ import { Menu, MenuModule } from 'primeng/menu';
     <p-menu #actionsMenu [popup]="true" [model]="mobileActions"></p-menu>
   `
 })
-export class CustomerFiltersComponent {
+export class CategoryFiltersComponent {
   @Input() search = '';
   @Input() selectedCount = 0;
 
   @Output() searchChange = new EventEmitter<string>();
   @Output() create = new EventEmitter<boolean>();
-  @Output() export = new EventEmitter<void>();
   @Output() deleteSelected = new EventEmitter<void>();
-  @Output() exportCsv = new EventEmitter<void>();
-  @Output() exportPdf = new EventEmitter<void>();
 
   @ViewChild('actionsMenu') actionsMenu!: Menu;
 
   mobileActions = [
     {
-      label: 'Categorias',
+      label: 'Clientes',
       icon: 'pi pi-tags',
-      command: () => this.openCategories()
+      command: () => this.openCustomers()
     },
-    {
-      label: 'Exportar CSV',
-      icon: 'pi pi-upload',
-      command: () => this.exportCsv.emit()
-    },
-    {
-      label: 'Exportar PDF',
-      icon: 'pi pi-file-pdf',
-      command: () => this.exportPdf.emit()
-    },
-    // {
-    //   separator: true
-    // },
-    // {
-    //   label: 'Excluir selecionados',
-    //   icon: 'pi pi-trash',
-    //   disabled: !this.selectedCount,
-    //   command: () => this.deleteSelected.emit()
-    // }
   ];
 
   mobile = signal(false);
@@ -149,7 +124,7 @@ export class CustomerFiltersComponent {
     this.actionsMenu.toggle(event);
   }
 
-  openCategories() {
-    void this.router.navigate(['/customers/categories']);
+  openCustomers() {
+    void this.router.navigate(['/customers']);
   }
 }
