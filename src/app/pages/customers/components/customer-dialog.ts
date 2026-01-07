@@ -20,7 +20,8 @@ import { CategoryDialogComponent } from '../categories/components/category-dialo
 import {
   CustomerCategoriesService,
   CustomerCategory,
-  CustomerCategoryCreateRequestDto
+  CustomerCategoryCreateRequestDto,
+  CustomerCategoryUpdateRequestDto
 } from '../customer-categories.service';
 import { ToastService } from '@app/services/toast.service';
 
@@ -348,8 +349,8 @@ export class CustomerDialogComponent implements OnChanges {
     this.categoryDialogVisible = false;
   }
 
-  createCategory(payload: CustomerCategoryCreateRequestDto) {
-    this.categoriesService.create(payload).pipe(take(1)).subscribe({
+  createCategory(payload: CustomerCategoryCreateRequestDto | CustomerCategoryUpdateRequestDto) {
+    this.categoriesService.create(payload as CustomerCategoryCreateRequestDto).pipe(take(1)).subscribe({
       next: (category) => {
         this.toast.success('Sucesso', 'Categoria criada');
         this.categoryDialogVisible = false;

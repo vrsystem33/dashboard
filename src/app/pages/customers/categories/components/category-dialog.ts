@@ -94,8 +94,8 @@ export class CategoryDialogComponent implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   statuses = [
-    { name: 'Ativo', code: true },
-    { name: 'Inativo', code: false }
+    { name: 'Ativo', code: 1 },
+    { name: 'Inativo', code: 0 }
   ];
 
   form: FormGroup;
@@ -104,7 +104,7 @@ export class CategoryDialogComponent implements OnChanges {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       description: [''],
-      status: [true, Validators.required],
+      status: [this.statuses[0].code, Validators.required],
     });
   }
 
