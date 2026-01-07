@@ -19,6 +19,7 @@ export const appRoutes: Routes = [
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') },
             { path: 'settings', component: Settings },
+            { path: 'customers/categories', loadComponent: () => import('@app/pages/customers/categories/categories').then(m => m.CustomerCategoriesPage) },
             { path: 'customers', loadComponent: () => import('@app/pages/customers/customers').then(m => m.CustomersPage) },
             { path: 'orders', loadComponent: () => import('@app/pages/orders/orders').then(m => m.OrdersPage) },
             { path: 'assistants', loadComponent: () => import('@app/pages/assistants/assistants').then(m => m.AssistantsPage) },

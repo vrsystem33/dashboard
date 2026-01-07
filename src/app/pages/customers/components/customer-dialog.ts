@@ -15,7 +15,14 @@ import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { PanelModule } from 'primeng/panel';
 import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from '../customers.models';
-import { CustomerCategory } from '../customer-categories.service';
+import { take } from 'rxjs/operators';
+import { CategoryDialogComponent } from '../categories/components/category-dialog';
+import {
+  CustomerCategoriesService,
+  CustomerCategory,
+  CustomerCategoryCreateRequestDto
+} from '../customer-categories.service';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
   selector: 'app-customer-dialog',
@@ -28,6 +35,7 @@ import { CustomerCategory } from '../customer-categories.service';
     ButtonModule,
     SelectModule,
     PanelModule,
+    CategoryDialogComponent,
   ],
   template: `
     <p-dialog
@@ -65,16 +73,26 @@ import { CustomerCategory } from '../customer-categories.service';
 
           <div>
             <label for="category" class="block font-bold mb-2">Categoria</label>
-            <p-select
-              inputId="category"
-              formControlName="category_id"
-              [options]="categories"
-              optionLabel="name"
-              optionValue="id"
-              placeholder="Selecione a categoria"
-              class="w-full"
-              appendTo="body"
-            />
+            <div class="flex gap-2 items-center">
+              <p-select
+                inputId="category"
+                formControlName="category_id"
+                [options]="categories"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Selecione a categoria"
+                class="w-full"
+                appendTo="body"
+              />
+              <button
+                pButton
+                type="button"
+                label="Nova categoria"
+                icon="pi pi-plus"
+                class="p-button-outlined shrink-0"
+                (click)="openCategoryDialog()"
+              ></button>
+            </div>
             <small class="text-red-500" *ngIf="form.get('category_id')?.invalid && form.get('category_id')?.touched">
               A categoria é obrigatória.
             </small>
@@ -182,6 +200,13 @@ import { CustomerCategory } from '../customer-categories.service';
         <p-button label="Salvar" icon="pi pi-check" (click)="onSave()" [disabled]="form.invalid" />
       </ng-template>
     </p-dialog>
+
+    <app-category-dialog
+      [visible]="categoryDialogVisible"
+      [category]="null"
+      (cancel)="closeCategoryDialog()"
+      (save)="createCategory($event)">
+    </app-category-dialog>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -198,10 +223,15 @@ export class CustomerDialogComponent implements OnChanges {
   ];
 
   public showMoreInfo: boolean = true;
+  categoryDialogVisible = false;
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private categoriesService: CustomerCategoriesService,
+    private toast: ToastService
+  ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -308,6 +338,30 @@ export class CustomerDialogComponent implements OnChanges {
     this.form.markAsUntouched();
 
     this.cancel.emit()
+  }
+
+  openCategoryDialog() {
+    this.categoryDialogVisible = true;
+  }
+
+  closeCategoryDialog() {
+    this.categoryDialogVisible = false;
+  }
+
+  createCategory(payload: CustomerCategoryCreateRequestDto) {
+    this.categoriesService.create(payload).pipe(take(1)).subscribe({
+      next: (category) => {
+        this.toast.success('Sucesso', 'Categoria criada');
+        this.categoryDialogVisible = false;
+        if (category?.id) {
+          this.form.patchValue({ category_id: category.id });
+        }
+        this.categoriesService.load().pipe(take(1)).subscribe();
+      },
+      error: (e) => {
+        this.toast.error('Error', e);
+      }
+    });
   }
 
   private buildPayload(): CustomerCreateRequestDto | CustomerUpdateRequestDto {
