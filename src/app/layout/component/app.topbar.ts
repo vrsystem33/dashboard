@@ -1,13 +1,19 @@
 import { Component, DestroyRef, inject, computed } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+
+import { MenuItem } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 import { StyleClassModule } from 'primeng/styleclass';
-import { AppConfigurator } from './app.configurator';
-import { LayoutService } from '../service/layout.service';
+
 import { AuthFacade } from '@app/core/auth/auth.facade';
 import { I18nService } from '@app/core/i18n/i18n.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { LayoutService } from '../service/layout.service';
+
+import { AppConfigurator } from './app.configurator';
+
 
 @Component({
     selector: 'app-topbar',
@@ -16,7 +22,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         RouterModule,
         CommonModule,
         StyleClassModule,
-        AppConfigurator
+        AppConfigurator,
+        TooltipModule,
     ],
     template: `
         <div class="layout-topbar">
@@ -48,13 +55,29 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
             <div class="layout-topbar-actions">
                 <div class="layout-config-menu">
-                    <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+                    <!-- Toggle Dark/Light theme -->
+                    <button
+                        type="button"
+                        class="layout-topbar-action"
+                        (click)="toggleDarkMode()"
+                        pTooltip="Toggle theme"
+                        tooltipPosition="bottom"
+                    >
                         <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                     </button>
-                    <button type="button" class="layout-topbar-action" (click)="toggleLanguage()">
+
+                    <!-- Toggle Language -->
+                    <button
+                        type="button"
+                        class="layout-topbar-action"
+                        (click)="toggleLanguage()"
+                        pTooltip="{{currentLangLabel()}}"
+                        tooltipPosition="bottom"
+                    >
                         <i class="pi pi-globe mr-2"></i>
-                        <span class="uppercase">{{ languageLabel }}</span>
                     </button>
+
+                    <!-- Toggle Palette -->
                     <div class="relative">
                         <button
                             class="layout-topbar-action layout-topbar-action-highlight"
@@ -64,28 +87,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                             leaveToClass="hidden"
                             leaveActiveClass="animate-fadeout"
                             [hideOnOutsideClick]="true"
+                            pTooltip="Toggle Palette"
+                            tooltipPosition="bottom"
                         >
                             <i class="pi pi-palette"></i>
                         </button>
                         <app-configurator />
                     </div>
                 </div>
-
-                <button
-                    class="layout-topbar-menu-button layout-topbar-action"
-                    pStyleClass="@next"
-                    enterFromClass="hidden"
-                    enterActiveClass="animate-scalein"
-                    leaveToClass="hidden"
-                    leaveActiveClass="animate-fadeout"
-                    [hideOnOutsideClick]="true"
-                    #ellipsisBtn
-                >
-                    <i class="pi pi-globe"></i>
-                    <span class="lang-label">
-                        {{ currentLangLabel() }}
-                    </span>
-                </button>
 
                 <div class="layout-topbar-menu hidden lg:block" #menuPanel>
                     <div class="layout-topbar-menu-content">
@@ -97,11 +106,23 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                             <i class="pi pi-inbox"></i>
                             <span>Messages</span>
                         </button> -->
-                        <button type="button" class="layout-topbar-action" (click)="goSettings(); closeMenu(menuPanel)">
+                        <button
+                            type="button"
+                            class="layout-topbar-action"
+                            (click)="goSettings(); closeMenu(menuPanel)"
+                            pTooltip="Profile"
+                            tooltipPosition="bottom"
+                        >
                             <i class="pi pi-user"></i>
-                            <span>Profile</span>
                         </button>
-                        <button type="button" class="layout-topbar-action" (click)="onLogout(); closeMenu(menuPanel)">
+
+                        <button
+                            type="button"
+                            class="layout-topbar-action"
+                            (click)="onLogout(); closeMenu(menuPanel)"
+                            pTooltip="Logout"
+                            tooltipPosition="bottom"
+                        >
                             <i class="pi pi-fw pi-sign-out"></i>
                             <span>Logout</span>
                         </button>
@@ -114,23 +135,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class AppTopbar {
     items!: MenuItem[];
 
-    languageLabel: string;
-
-    private readonly destroyRef = inject(DestroyRef);
-
     constructor(
         public layoutService: LayoutService,
         private auth: AuthFacade,
         private router: Router,
         private i18nService: I18nService
-    ) {
-        const currentLanguage = this.i18nService.getCurrentLanguage();
-        this.languageLabel = this.getToggleLabel(currentLanguage);
-
-        this.i18nService.languageChanges$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((language) => (this.languageLabel = this.getToggleLabel(language)));
-    }
+    ) {}
 
     readonly currentLangLabel = computed(() =>
         this.i18nService.getCurrentLanguage() === 'pt-BR' ? 'PT' : 'EN'

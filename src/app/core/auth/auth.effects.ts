@@ -1,14 +1,17 @@
 import { Injectable, inject } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import * as AuthActions from './auth.actions';
-import { AuthService } from '@app/services/auth.service';
-import { TokenService } from '@app/services/token.service';
-import { catchError, map, mergeMap, of, switchMap, tap, take, exhaustMap, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, mergeMap, of, switchMap, tap, take, exhaustMap, withLatestFrom, timer, finalize } from 'rxjs';
+
+import { AuthService } from '@app/services/auth.service';
+import { TokenService } from '@app/services/token.service';
+
+import { NgxSpinnerService } from 'ngx-spinner';
+
+import * as AuthActions from './auth.actions';
 import { AppState } from '../app.state';
 import { selectTokens } from './auth.selectors';
-import { timer } from 'rxjs';
 
 @Injectable()
 export class AuthEffects {
@@ -16,6 +19,7 @@ export class AuthEffects {
   private readonly actions$ = inject(Actions);
   private readonly auth = inject(AuthService);
   private readonly tokenService = inject(TokenService);
+  private readonly spinner = inject(NgxSpinnerService);
   private readonly router = inject(Router);
   private readonly store = inject<Store<AppState>>(Store);
 
@@ -141,12 +145,16 @@ export class AuthEffects {
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.logoutRequested),
+      tap(() => {
+        this.spinner.show();
+      }),
       exhaustMap(() => {
         const tokens = this.tokenService.getTokens();
         return this.auth.logout(tokens ? { refresh_token: tokens.refresh_token } : { refresh_token: '' })
           .pipe(
             map(() => AuthActions.logoutSucceeded()),
-            catchError(err => of(AuthActions.logoutFailed({ error: err.message ?? 'Logout failed' })))
+            catchError(err => of(AuthActions.logoutFailed({ error: err.message ?? 'Logout failed' }))),
+            finalize(() => this.spinner.hide())
           );
       })
     )

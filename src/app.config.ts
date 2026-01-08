@@ -1,16 +1,23 @@
 import { ApplicationConfig, LOCALE_ID, importProvidersFrom } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
 import Aura from '@primeuix/themes/aura';
-import { providePrimeNG } from 'primeng/config';
-import { appRoutes } from './app.routes';
-import { JwtInterceptor } from '@app/interceptors/jwt.interceptor';
-import { HttpProgressInterceptor } from '@app/interceptors/http-progress.interceptor';
-import { ErrorInterceptor } from '@app/interceptors/error.interceptor';
+
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { providePrimeNG } from 'primeng/config';
+import { MessageService } from 'primeng/api';
+
+import { NgxSpinnerModule } from "ngx-spinner";
+
+import { appRoutes } from './app.routes';
+
 import { authReducer } from '@app/core/auth/auth.reducer';
 import { preferencesReducer } from '@app/core/preferences/preferences.reducer';
 import { analyticsReducer } from '@app/core/analytics/analytics.reducer';
@@ -19,10 +26,13 @@ import { metaReducers } from '@app/core/app.meta-reducers';
 import { AuthEffects } from '@app/core/auth/auth.effects';
 import { AnalyticsEffects } from '@app/core/analytics/analytics.effects';
 import { SubscriptionEffects } from '@app/core/subscription/subscription.effects';
-import { MessageService } from 'primeng/api';
+
+import { JwtInterceptor } from '@app/interceptors/jwt.interceptor';
+import { HttpProgressInterceptor } from '@app/interceptors/http-progress.interceptor';
+import { ErrorInterceptor } from '@app/interceptors/error.interceptor';
+
 import { loadLocale } from '@app/utils/loadLocale';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 
 export function httpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, '/i18n/', '.json');
@@ -75,7 +85,9 @@ export const appConfig: ApplicationConfig = {
                     useFactory: httpLoaderFactory,
                     deps: [HttpClient]
                 }
-            })
+            }),
+            BrowserAnimationsModule,
+            NgxSpinnerModule.forRoot({ type: 'ball-atom' })
         ),
     ]
 };

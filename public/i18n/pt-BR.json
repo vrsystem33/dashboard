@@ -27,5 +27,8 @@
         "reportsCustomers": "Clientes",
         "reportsProducts": "Produtos",
         "reportsSales": "Vendas"
+    },
+    "system": {
+        "logout": "Saindo"
     }
 }
