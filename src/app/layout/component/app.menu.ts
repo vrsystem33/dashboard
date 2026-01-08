@@ -29,8 +29,8 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-id-card',
                         items: [
                             { label: 'menu.customers', icon: 'pi pi-fw pi-users', routerLink: ['/customers'] },
-                            { label: 'menu.suppliers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
-                            { label: 'menu.carriers', icon: 'pi pi-fw pi-truck', routerLink: ['/orders'] },
+                            { label: 'menu.suppliers', icon: 'pi pi-fw pi-users', routerLink: ['/suppliers'] },
+                            { label: 'menu.carriers', icon: 'pi pi-fw pi-users', routerLink: ['/carriers'] },
                             { label: 'menu.products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
                             { label: 'menu.issuers', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
                             { label: 'menu.paymentMethods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
