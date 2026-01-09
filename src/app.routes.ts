@@ -19,7 +19,7 @@ export const appRoutes: Routes = [
             { path: 'settings', component: Settings },
             // { path: 'customers/categories', loadComponent: () => import('@app/pages/customers/categories/categories').then(m => m.CustomerCategoriesPage) },
             { path: 'customers', loadChildren: () => import('@app/pages/customers/customers.routes') },
-            { path: 'suppliers', loadChildren: () => import('@app/pages/customers/customers.routes') },
+            { path: 'suppliers', loadChildren: () => import('@app/pages/suppliers/suppliers.routes') },
             { path: 'carriers', loadChildren: () => import('@app/pages/customers/customers.routes') },
             { path: 'orders', loadComponent: () => import('@app/pages/orders/orders').then(m => m.OrdersPage) },
             { path: 'assistants', loadComponent: () => import('@app/pages/assistants/assistants').then(m => m.AssistantsPage) },

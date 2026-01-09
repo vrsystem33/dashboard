@@ -14,19 +14,19 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { PanelModule } from 'primeng/panel';
-import { CustomerCreateRequestDto, CustomerRow, CustomerUpdateRequestDto } from '../customers.models';
+import { SupplierCreateRequestDto, SupplierRow, SupplierUpdateRequestDto } from '../suppliers.models';
 import { take } from 'rxjs/operators';
 import { CategoryDialogComponent } from '../categories/components/category-dialog';
 import {
-  CustomerCategoriesService,
-  CustomerCategory,
-  CustomerCategoryCreateRequestDto,
-  CustomerCategoryUpdateRequestDto
-} from '../customer-categories.service';
+  SupplierCategoriesService,
+  SupplierCategory,
+  SupplierCategoryCreateRequestDto,
+  SupplierCategoryUpdateRequestDto
+} from '../supplier-categories.service';
 import { ToastService } from '@app/services/toast.service';
 
 @Component({
-  selector: 'app-customer-dialog',
+  selector: 'app-supplier-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -46,7 +46,7 @@ import { ToastService } from '@app/services/toast.service';
       [draggable]="false"
       [resizable]="false"
       [closable]="true"
-      [header]="customer ? 'Editar Cliente' : 'Novo Cliente'"
+      [header]="supplier ? 'Editar Fornecedor' : 'Novo Fornecedor'"
       (onHide)="cancel.emit()"
     >
       <ng-template #content>
@@ -211,11 +211,11 @@ import { ToastService } from '@app/services/toast.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerDialogComponent implements OnChanges {
+export class SupplierDialogComponent implements OnChanges {
   @Input() visible = false;
-  @Input() customer: CustomerRow | null = null;
-  @Input() categories: CustomerCategory[] = [];
-  @Output() save = new EventEmitter<CustomerCreateRequestDto | CustomerUpdateRequestDto>();
+  @Input() supplier: SupplierRow | null = null;
+  @Input() categories: SupplierCategory[] = [];
+  @Output() save = new EventEmitter<SupplierCreateRequestDto | SupplierUpdateRequestDto>();
   @Output() cancel = new EventEmitter<void>();
 
   statuses = [
@@ -223,14 +223,14 @@ export class CustomerDialogComponent implements OnChanges {
     { name: 'Inativo', code: false }
   ];
 
-  showMoreInfo: boolean = true;
+  public showMoreInfo: boolean = true;
   categoryDialogVisible = false;
 
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private categoriesService: CustomerCategoriesService,
+    private categoriesService: SupplierCategoriesService,
     private toast: ToastService
   ) {
     this.form = this.fb.group({
@@ -254,25 +254,25 @@ export class CustomerDialogComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['customer']) {
-      if (this.customer) {
+    if (changes['supplier']) {
+      if (this.supplier) {
         this.form.reset({
-          name: this.customer.name,
-          email: this.customer.email,
-          phone: this.customer.phone ?? '',
-          category_id: this.customer.category_id ?? null,
-          status: this.customer.status,
-          last_name: this.customer.last_name ?? '',
-          nickname: this.customer.nickname ?? '',
-          identification: this.customer.identification ?? '',
-          secondary_phone: this.customer.secondary_phone ?? '',
-          postal_code: this.customer.postal_code ?? '',
-          address: this.customer.address ?? '',
-          number: this.customer.number ?? '',
-          neighborhood: this.customer.neighborhood ?? '',
-          complement: this.customer.complement ?? '',
-          city: this.customer.city ?? '',
-          state: this.customer.state ?? '',
+          name: this.supplier.name,
+          email: this.supplier.email,
+          phone: this.supplier.phone ?? '',
+          category_id: this.supplier.category_id ?? null,
+          status: this.supplier.status,
+          last_name: this.supplier.last_name ?? '',
+          nickname: this.supplier.nickname ?? '',
+          identification: this.supplier.identification ?? '',
+          secondary_phone: this.supplier.secondary_phone ?? '',
+          postal_code: this.supplier.postal_code ?? '',
+          address: this.supplier.address ?? '',
+          number: this.supplier.number ?? '',
+          neighborhood: this.supplier.neighborhood ?? '',
+          complement: this.supplier.complement ?? '',
+          city: this.supplier.city ?? '',
+          state: this.supplier.state ?? '',
         });
       } else {
         this.form.reset({
@@ -307,7 +307,7 @@ export class CustomerDialogComponent implements OnChanges {
 
     this.save.emit(payload);
 
-    if (!this.customer) {
+    if (!this.supplier) {
       // ✅ RESET PROFISSIONAL
       this.form.reset({
         name: '',
@@ -324,7 +324,7 @@ export class CustomerDialogComponent implements OnChanges {
   }
 
   onCloseForm() {
-    if (this.customer) {
+    if (this.supplier) {
       return this.cancel.emit()
     }
 
@@ -349,8 +349,8 @@ export class CustomerDialogComponent implements OnChanges {
     this.categoryDialogVisible = false;
   }
 
-  createCategory(payload: CustomerCategoryCreateRequestDto | CustomerCategoryUpdateRequestDto) {
-    this.categoriesService.create(payload as CustomerCategoryCreateRequestDto).pipe(take(1)).subscribe({
+  createCategory(payload: SupplierCategoryCreateRequestDto | SupplierCategoryUpdateRequestDto) {
+    this.categoriesService.create(payload as SupplierCategoryCreateRequestDto).pipe(take(1)).subscribe({
       next: (category) => {
         this.toast.success('Sucesso', 'Categoria criada');
         this.categoryDialogVisible = false;
@@ -365,7 +365,7 @@ export class CustomerDialogComponent implements OnChanges {
     });
   }
 
-  private buildPayload(): CustomerCreateRequestDto | CustomerUpdateRequestDto {
+  private buildPayload(): SupplierCreateRequestDto | SupplierUpdateRequestDto {
     const value = this.form.getRawValue();
     const normalizedEntries = Object.entries(value).reduce<Record<string, unknown>>((acc, [key, v]) => {
       acc[key] = typeof v === 'string' ? v.trim() || null : v;
@@ -376,6 +376,6 @@ export class CustomerDialogComponent implements OnChanges {
       Object.entries(normalizedEntries).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
     ) as Record<string, any>;
 
-    return cleaned as CustomerCreateRequestDto | CustomerUpdateRequestDto;
+    return cleaned as SupplierCreateRequestDto | SupplierUpdateRequestDto;
   }
 }
