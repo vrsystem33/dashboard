@@ -11,8 +11,6 @@ export interface SupplierListItemDto {
   state?: string | null;
   category_name?: string | null;
   category_id?: number | null;
-  total_sales?: number | null;
-  total_spent?: number | null;
   last_name?: string | null;
   nickname?: string | null;
   identification?: string | null;
@@ -62,8 +60,6 @@ export function toSupplierRow(dto: SupplierListItemDto): SupplierRow {
     state: dto.state ?? null,
     categoryName: dto.category_name ?? null,
     category_id: dto.category_id ?? null,
-    totalSales: dto.total_sales != null ? Number(dto.total_sales) : null,
-    totalSpent: dto.total_spent != null ? Number(dto.total_spent) : null,
     last_name: dto.last_name ?? null,
     nickname: dto.nickname ?? null,
     identification: dto.identification ?? null,

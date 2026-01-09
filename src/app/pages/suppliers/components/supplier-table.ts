@@ -58,13 +58,9 @@ import { SupplierRow } from '../suppliers.models';
               Status
               <p-sortIcon field="status" />
             </th>
-            <th pSortableColumn="totalSales">
-              Vendas
-              <p-sortIcon field="totalSales" />
-            </th>
-            <th pSortableColumn="totalSpent">
-              Total Gasto
-              <p-sortIcon field="totalSpent" />
+            <th pSortableColumn="categoryName">
+              Categoria
+              <p-sortIcon field="categoryName" />
             </th>
             <th class="actions">Ações</th>
           </tr>
@@ -84,8 +80,7 @@ import { SupplierRow } from '../suppliers.models';
                 [value]="c.status ? 'Ativo' : 'Inativo'
               "></p-tag>
             </td>
-            <td>{{ c.totalSales ?? 0 }}</td>
-            <td>{{ (c.totalSpent ?? 0) | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
+            <td>{{ c.categoryName }}</td>
             <td class="actions">
               <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
               <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(c)"></button>
@@ -116,8 +111,7 @@ import { SupplierRow } from '../suppliers.models';
                   <p-tag [severity]="c.status ? 'success' : 'danger'" [value]="c.status ? 'Ativo' : 'Inativo'"></p-tag>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span>{{ c.totalSales ?? 0 }} pedidos</span>
-                  <span>{{ (c.totalSpent ?? 0) | currency:'BRL':'symbol-narrow':'1.2-2' }}</span>
+                  <span>{{ c.categoryName }}</span>
                 </div>
                 <div class="flex gap-2 justify-end">
                   <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
@@ -219,15 +213,14 @@ export class SuppliersTableComponent {
           <td>${s.email}</td>
           <td>${s.phone ?? '-'}</td>
           <td>${s.status ? 'Ativo' : 'Inativo'}</td>
-          <td style="text-align:right">${s.totalSales ?? 0}</td>
-          <td style="text-align:right">${new Intl.NumberFormat(this.locale, { style: 'currency', currency: this.currencyCode }).format(s.totalSpent ?? 0)}</td>
+          <td style="text-align:right">${s.categoryName}</td>
         </tr>
       `).join('');
 
       const html = `
         <html>
           <head>
-            <title>Clientes</title>
+            <title>Fornecedores</title>
             <meta charset="utf-8" />
             <style>
               body { font-family: Arial, sans-serif; padding: 16px; }
@@ -238,7 +231,7 @@ export class SuppliersTableComponent {
             </style>
           </head>
           <body>
-            <h1>Clientes</h1>
+            <h1>Fornecedores</h1>
             <table>
               <thead>
                 <tr>
@@ -246,8 +239,7 @@ export class SuppliersTableComponent {
                   <th>Email</th>
                   <th>Telefone</th>
                   <th>Status</th>
-                  <th style="text-align:right">Pedidos</th>
-                  <th style="text-align:right">Total Gasto</th>
+                  <th style="text-align:right">Categoria</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
