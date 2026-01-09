@@ -15,7 +15,7 @@ import { SupplierRow } from '../suppliers.models';
     TableModule,
     ButtonModule,
     TagModule,
-    CurrencyPipe,
+    // CurrencyPipe,
   ],
   template: `
     <div class="card">
