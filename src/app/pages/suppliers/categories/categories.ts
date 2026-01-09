@@ -31,8 +31,8 @@ import { CategoryDialogComponent } from './components/category-dialog';
     <div class="space-y-6">
       <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 class="text-2xl font-semibold">Categorias de Clientes</h1>
-          <p class="text-muted-color">Organize e mantenha as categorias dos seus clientes</p>
+          <h1 class="text-2xl font-semibold">Categorias de Fornecedores</h1>
+          <p class="text-muted-color">Organize e mantenha as categorias dos seus fornecedores</p>
         </div>
       </div>
 
