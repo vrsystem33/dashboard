@@ -16,7 +16,7 @@ import { SupplierCreateRequestDto, SupplierRow, SupplierUpdateRequestDto } from 
 import { ToastService } from '@app/services/toast.service';
 
 @Component({
-  selector: 'app-customers',
+  selector: 'app-suppliers',
   standalone: true,
   imports: [
     CommonModule,

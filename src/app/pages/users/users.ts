@@ -7,37 +7,37 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 
-import { CarriersService } from './carriers.service';
-import { CarriersTableComponent } from './components/carrier-table';
-import { CarrierDialogComponent } from './components/carrier-dialog';
-import { CarrierFiltersComponent } from './components/carrier-filters';
-import { CarrierCategoriesService, CarrierCategory } from './carrier-categories.service';
-import { CarrierCreateRequestDto, CarrierRow, CarrierUpdateRequestDto } from './carriers.models';
+import { UsersService } from './users.service';
+import { UsersTableComponent } from './components/users-table';
+import { UserDialogComponent } from './components/user-dialog';
+import { UserFiltersComponent } from './components/user-filters';
+import { UserCategoriesService, UserCategory } from './user-categories.service';
+import { UserCreateRequestDto, UserRow, UserUpdateRequestDto } from './users.models';
 import { ToastService } from '@app/services/toast.service';
 
 @Component({
-  selector: 'app-carriers',
+  selector: 'app-users',
   standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
     CardModule,
     ToastModule,
-    CarriersTableComponent,
-    CarrierDialogComponent,
-    CarrierFiltersComponent,
+    UsersTableComponent,
+    UserDialogComponent,
+    UserFiltersComponent,
     ConfirmDialogModule,
   ],
   template: `
     <div class="space-y-6">
       <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 class="text-2xl font-semibold">Transportadoras</h1>
-          <p class="text-muted-color">Gerencie sua base de transportadoras e seus detalhes</p>
+          <h1 class="text-2xl font-semibold">Usuários</h1>
+          <p class="text-muted-color">Gerencie sua base de usuários e seus detalhes</p>
         </div>
       </div>
 
-      <app-carrier-filters
+      <app-user-filters
         [search]="search()"
         [selectedCount]="selectedCount()"
         (searchChange)="search.set($event)"
@@ -45,24 +45,24 @@ import { ToastService } from '@app/services/toast.service';
         (exportCsv)="onExportCSV()"
         (exportPdf)="onExportPDF()"
         (deleteSelected)="onDeleteSelected()">
-      </app-carrier-filters>
+      </app-user-filters>
 
-      <app-carriers-table
-        #carriersTable
-        [carriers]="filtered()"
+      <app-users-table
+        #usersTable
+        [users]="filtered()"
         [loading]="loading()"
         (selectionChange)="onSelectionChange($event)"
         (edit)="openEdit($event)"
         (delete)="confirmDelete($event)">
-      </app-carriers-table>
+      </app-users-table>
 
-      <app-carrier-dialog
+      <app-user-dialog
         [visible]="dialogOpen()"
-        [carrier]="editing()"
+        [user]="editing()"
         [categories]="categories()"
         (cancel)="closeDialog()"
         (save)="save($event)">
-      </app-carrier-dialog>
+      </app-user-dialog>
     </div>
 
     <p-confirmdialog [style]="{ width: '450px' }" />
@@ -75,27 +75,27 @@ import { ToastService } from '@app/services/toast.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService]
 })
-export class CarriersPage implements OnInit {
-  @ViewChild('carriersTable') carriersTable!: CarriersTableComponent;
+export class UsersPage implements OnInit {
+  @ViewChild('usersTable') usersTable!: UsersTableComponent;
 
   readonly search = signal<string>('');
   readonly dialogOpen = signal<boolean>(false);
-  readonly editing = signal<CarrierRow | null>(null);
+  readonly editing = signal<UserRow | null>(null);
 
-  readonly carriers = signal<CarrierRow[]>([]);
+  readonly users = signal<UserRow[]>([]);
   readonly loading = signal<boolean>(false);
   readonly selection = signal<string[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
-  readonly categories = signal<CarrierCategory[]>([]);
+  readonly categories = signal<UserCategory[]>([]);
 
   constructor(
-    private service: CarriersService,
-    private categoriesService: CarrierCategoriesService,
+    private service: UsersService,
+    private categoriesService: UserCategoriesService,
     private confirmationService: ConfirmationService,
     private toast: ToastService
   ) {
-    this.service.carriers$.subscribe(this.carriers.set);
+    this.service.users$.subscribe(this.users.set);
     this.service.loading$.subscribe(this.loading.set);
     this.categoriesService.categories$.subscribe(this.categories.set);
   }
@@ -108,9 +108,9 @@ export class CarriersPage implements OnInit {
   readonly filtered = computed(() => {
     const term = this.search().toLowerCase().trim();
 
-    if (!term) return this.carriers();
+    if (!term) return this.users();
 
-    return this.carriers().filter(s =>
+    return this.users().filter(s =>
       s.name.toLowerCase().includes(term) ||
       s.email.toLowerCase().includes(term) ||
       (s.phone ?? '').toLowerCase().includes(term)
@@ -126,10 +126,10 @@ export class CarriersPage implements OnInit {
     this.dialogOpen.set(true);
   }
 
-  openEdit(s: CarrierRow) {
+  openEdit(s: UserRow) {
     this.service.getById(s.uuid).pipe(take(1)).subscribe({
-      next: (carrier) => {
-        this.editing.set(carrier);
+      next: (user) => {
+        this.editing.set(user);
         this.dialogOpen.set(true);
       },
       error: (e) => {
@@ -142,31 +142,31 @@ export class CarriersPage implements OnInit {
     this.dialogOpen.set(false);
   }
 
-  save(payload: CarrierCreateRequestDto | CarrierUpdateRequestDto) {
+  save(payload: UserCreateRequestDto | UserUpdateRequestDto) {
     const isEdit = !!this.editing();
     if (isEdit && this.editing()?.uuid) {
       this.service.update(this.editing()!.uuid, payload).pipe(take(1)).subscribe(() => {
-        this.toast.success('Sucesso', 'Transportadora atualizado');
+        this.toast.success('Sucesso', 'Usuário atualizado');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
     } else {
-      this.service.create(payload as CarrierCreateRequestDto).pipe(take(1)).subscribe(() => {
-        this.toast.success('Sucesso', 'Transportadora criado');
+      this.service.create(payload as UserCreateRequestDto).pipe(take(1)).subscribe(() => {
+        this.toast.success('Sucesso', 'Usuário criado');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
     }
   }
 
-  confirmDelete(s: CarrierRow) {
+  confirmDelete(s: UserRow) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.service.remove(s.uuid).pipe(take(1)).subscribe(() => {
-          this.toast.success('Sucesso', 'Transportadora removido');
+          this.toast.success('Sucesso', 'Usuário removido');
           this.service.load().pipe(take(1)).subscribe();
         });
       }
@@ -184,9 +184,9 @@ export class CarriersPage implements OnInit {
         if (!ids.length) return;
 
         this.service.removeMany(ids).pipe(take(1)).subscribe(() => {
-          this.toast.success('Sucesso', `${ids.length} Transportadora(s) removido(s)`);
+          this.toast.success('Sucesso', `${ids.length} Usuário(s) removido(s)`);
           this.selection.set([]);
-          if (this.carriersTable) this.carriersTable.clearSelection();
+          if (this.usersTable) this.usersTable.clearSelection();
           this.service.load().pipe(take(1)).subscribe();
         });
       }
@@ -194,10 +194,10 @@ export class CarriersPage implements OnInit {
   }
 
   onExportCSV() {
-    if (this.carriersTable) this.carriersTable.exportCSV();
+    if (this.usersTable) this.usersTable.exportCSV();
   }
 
   onExportPDF() {
-    if (this.carriersTable) this.carriersTable.exportPDF();
+    if (this.usersTable) this.usersTable.exportPDF();
   }
 }

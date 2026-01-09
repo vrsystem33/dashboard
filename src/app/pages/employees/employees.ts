@@ -16,7 +16,7 @@ import { EmployeeCreateRequestDto, EmployeeRow, EmployeeUpdateRequestDto } from 
 import { ToastService } from '@app/services/toast.service';
 
 @Component({
-  selector: 'app-customers',
+  selector: 'app-employees',
   standalone: true,
   imports: [
     CommonModule,

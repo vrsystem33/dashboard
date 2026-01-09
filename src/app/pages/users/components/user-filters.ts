@@ -8,10 +8,9 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ToolbarModule } from 'primeng/toolbar';
 import { Menu, MenuModule } from 'primeng/menu';
-import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-carrier-filters',
+  selector: 'app-user-filters',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,7 +20,6 @@ import { TooltipModule } from 'primeng/tooltip';
     IconFieldModule,
     InputIconModule,
     ToolbarModule,
-    TooltipModule,
     MenuModule,
   ],
   template: `
@@ -39,15 +37,7 @@ import { TooltipModule } from 'primeng/tooltip';
           <p-inputicon class="pi pi-search" />
         </p-iconfield>
 
-        <button
-          pButton
-          class="mr-4"
-          icon="pi pi-plus"
-          (click)="create.emit()"
-          label="Nova"
-          pTooltip="Nova Transportadora"
-          tooltipPosition="bottom"
-        ></button>
+        <button pButton class="mr-4" label="Novo Usuário" icon="pi pi-plus" (click)="create.emit()"></button>
 
         <button pButton type="button" label="Todas Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
       </ng-template>
@@ -68,7 +58,7 @@ import { TooltipModule } from 'primeng/tooltip';
           pInputText
           [(ngModel)]="search"
           (ngModelChange)="searchChange.emit($event)"
-          placeholder="Buscar transportadoras"
+          placeholder="Buscar cliente"
           class="w-full"
         />
         <p-inputicon class="pi pi-search" />
@@ -97,7 +87,7 @@ import { TooltipModule } from 'primeng/tooltip';
     <p-menu #actionsMenu [popup]="true" [model]="mobileActions"></p-menu>
   `
 })
-export class CarrierFiltersComponent {
+export class UserFiltersComponent {
   @Input() search = '';
   @Input() selectedCount = 0;
 
@@ -160,6 +150,6 @@ export class CarrierFiltersComponent {
   }
 
   openCategories() {
-    void this.router.navigate(['/carriers/categories']);
+    void this.router.navigate(['/users/categories']);
   }
 }

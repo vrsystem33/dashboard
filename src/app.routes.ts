@@ -21,7 +21,7 @@ export const appRoutes: Routes = [
             { path: 'issuers', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
             { path: 'payment-methods', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
             { path: 'employees', loadChildren: () => import('@app/pages/employees/employees.routes') },
-            { path: 'users', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'users', loadChildren: () => import('@app/pages/users/users.routes') },
 
 
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
