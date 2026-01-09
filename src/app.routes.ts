@@ -14,13 +14,20 @@ export const appRoutes: Routes = [
         component: AppLayout,
         children: [
             { path: 'dashboard', component: Dashboard },
+            { path: 'customers', loadChildren: () => import('@app/pages/customers/customers.routes') },
+            { path: 'suppliers', loadChildren: () => import('@app/pages/suppliers/suppliers.routes') },
+            { path: 'carriers', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'products', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'issuers', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'payment-methods', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'employees', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'users', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+
+
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') },
             { path: 'settings', component: Settings },
             // { path: 'customers/categories', loadComponent: () => import('@app/pages/customers/categories/categories').then(m => m.CustomerCategoriesPage) },
-            { path: 'customers', loadChildren: () => import('@app/pages/customers/customers.routes') },
-            { path: 'suppliers', loadChildren: () => import('@app/pages/suppliers/suppliers.routes') },
-            { path: 'carriers', loadChildren: () => import('@app/pages/customers/customers.routes') },
             { path: 'orders', loadComponent: () => import('@app/pages/orders/orders').then(m => m.OrdersPage) },
             { path: 'assistants', loadComponent: () => import('@app/pages/assistants/assistants').then(m => m.AssistantsPage) },
         ],

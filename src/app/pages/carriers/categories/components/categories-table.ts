@@ -4,7 +4,7 @@ import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DataViewModule } from 'primeng/dataview';
-import { CustomerCategory } from '../../customer-categories.service';
+import { CarrierCategory } from '../../carrier-categories.service';
 
 @Component({
   selector: 'app-categories-table',
@@ -147,14 +147,14 @@ import { CustomerCategory } from '../../customer-categories.service';
 export class CategoriesTableComponent {
   @ViewChild('dt') dt?: Table;
 
-  @Input() categories: CustomerCategory[] = [];
+  @Input() categories: CarrierCategory[] = [];
   @Input() loading = false;
 
-  @Output() edit = new EventEmitter<CustomerCategory>();
-  @Output() delete = new EventEmitter<CustomerCategory>();
+  @Output() edit = new EventEmitter<CarrierCategory>();
+  @Output() delete = new EventEmitter<CarrierCategory>();
   @Output() selectionChange = new EventEmitter<number[]>();
 
-  selected: CustomerCategory[] = [];
+  selected: CarrierCategory[] = [];
   mobile = signal(false);
 
   constructor() {
@@ -166,7 +166,7 @@ export class CategoriesTableComponent {
     this.mobile.set(window.innerWidth < 768);
   }
 
-  onSelectionChange(selected: CustomerCategory[]) {
+  onSelectionChange(selected: CarrierCategory[]) {
     const ids = selected.map(category => category.id);
     this.selectionChange.emit(ids);
   }

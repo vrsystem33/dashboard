@@ -4,10 +4,10 @@ import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DataViewModule } from 'primeng/dataview';
-import { SupplierRow } from '../suppliers.models';
+import { CarrierRow } from '../carriers.models';
 
 @Component({
-  selector: 'app-suppliers-table',
+  selector: 'app-carriers-table',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,14 +21,14 @@ import { SupplierRow } from '../suppliers.models';
     <div class="card">
       <p-table
         #dt
-        [value]="suppliers"
+        [value]="carriers"
         dataKey="uuid"
         [paginator]="true"
         [rows]="10"
         [rowsPerPageOptions]="[10,20,50]"
         [loading]="loading"
         [lazy]="false"
-        class="shadow-sm rounded-lg overflow-hidden suppliers-table"
+        class="shadow-sm rounded-lg overflow-hidden carriers-table"
         [tableStyle]="{'min-width':'800px'}"
         responsiveLayout="scroll"
         [globalFilterFields]="['name', 'email', 'phone', 'status']"
@@ -91,13 +91,13 @@ import { SupplierRow } from '../suppliers.models';
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="7" class="py-10 text-muted-color" style="text-align: center !important;">
-              Nenhum fornecedor encontrado
+              Nenhum Tranportadora encontrado
             </td>
           </tr>
         </ng-template>
       </p-table>
 
-      <p-dataview *ngIf="mobile()" [value]="suppliers" layout="list">
+      <p-dataview *ngIf="mobile()" [value]="carriers" layout="list">
         <ng-template let-items #list>
           <div class="flex flex-col">
             <div *ngFor="let c of items; let i = index">
@@ -126,7 +126,7 @@ import { SupplierRow } from '../suppliers.models';
   `,
   styles: `
     /* Alinhamento vertical consistente */
-    .suppliers-table {
+    .carriers-table {
 
       .p-datatable-thead > tr > th,
       .p-datatable-tbody > tr > td {
@@ -169,14 +169,14 @@ import { SupplierRow } from '../suppliers.models';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SuppliersTableComponent {
+export class CarriersTableComponent {
   @ViewChild('dt') dt?: Table;
 
-  @Input() suppliers: SupplierRow[] = [];
+  @Input() carriers: CarrierRow[] = [];
   @Input() loading = false;
 
-  @Output() edit = new EventEmitter<SupplierRow>();
-  @Output() delete = new EventEmitter<SupplierRow>();
+  @Output() edit = new EventEmitter<CarrierRow>();
+  @Output() delete = new EventEmitter<CarrierRow>();
   @Output() selectionChange = new EventEmitter<string[]>();
 
   selected: string[] = [];
@@ -207,7 +207,7 @@ export class SuppliersTableComponent {
       const w = window.open('', '_blank');
       if (!w) return;
 
-      const rows = this.suppliers.map(s => `
+      const rows = this.carriers.map(s => `
         <tr>
           <td>${s.name}</td>
           <td>${s.email}</td>
@@ -220,7 +220,7 @@ export class SuppliersTableComponent {
       const html = `
         <html>
           <head>
-            <title>Fornecedores</title>
+            <title>Tranportadoras</title>
             <meta charset="utf-8" />
             <style>
               body { font-family: Arial, sans-serif; padding: 16px; }
@@ -231,7 +231,7 @@ export class SuppliersTableComponent {
             </style>
           </head>
           <body>
-            <h1>Fornecedores</h1>
+            <h1>Tranportadoras</h1>
             <table>
               <thead>
                 <tr>

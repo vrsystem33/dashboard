@@ -12,7 +12,12 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: '[app-menuitem]',
-    imports: [CommonModule, RouterModule, RippleModule, TranslateModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        RippleModule,
+        TranslateModule
+    ],
     template: `
         <ng-container>
             <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">{{ (item.label ?? '') | translate }}</div>

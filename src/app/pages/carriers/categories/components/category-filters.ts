@@ -38,7 +38,7 @@ import { Menu, MenuModule } from 'primeng/menu';
         </p-iconfield>
 
         <button pButton class="mr-4" label="Nova Categoria" icon="pi pi-plus" (click)="create.emit()"></button>
-        <button pButton type="button" label="Fornecedores" icon="pi pi-building" class="p-button-outlined shrink-0" (click)="this.openCustomers()"></button>
+        <button pButton type="button" label="Transportadoras" icon="pi pi-truck" class="p-button-outlined shrink-0" (click)="this.openCustomers()"></button>
       </ng-template>
 
       <ng-template #end>

@@ -78,7 +78,7 @@ import { SupplierCategory } from '../../supplier-categories.service';
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-          <tr><td colspan="5" class="text-center py-10 text-muted-color">Nenhuma categoria encontrada</td></tr>
+          <tr><td colspan="5" class="py-10 text-muted-color" style="text-align: center !important;">Nenhuma categoria encontrada</td></tr>
         </ng-template>
       </p-table>
 

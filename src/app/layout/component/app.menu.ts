@@ -7,13 +7,19 @@ import { AppMenuitem } from './app.menuitem';
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule],
-    template: `<ul class="layout-menu">
-        <ng-container *ngFor="let item of model; let i = index">
-            <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
-            <li *ngIf="item.separator" class="menu-separator"></li>
-        </ng-container>
-    </ul> `
+    imports: [
+        CommonModule,
+        AppMenuitem,
+        RouterModule
+    ],
+    template: `
+        <ul class="layout-menu">
+            <ng-container *ngFor="let item of model; let i = index">
+                <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
+                <li *ngIf="item.separator" class="menu-separator"></li>
+            </ng-container>
+        </ul>
+    `
 })
 export class AppMenu {
     model: MenuItem[] = [];
@@ -34,6 +40,7 @@ export class AppMenu {
                             { label: 'menu.products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
                             { label: 'menu.issuers', icon: 'pi pi-fw pi-file', routerLink: ['/orders'] },
                             { label: 'menu.paymentMethods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
+                            { label: 'menu.employees', icon: 'pi pi-fw pi-sitemap', routerLink: ['/orders'] },
                             { label: 'menu.users', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
                         ]
                     },
