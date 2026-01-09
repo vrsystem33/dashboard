@@ -4,10 +4,10 @@ import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DataViewModule } from 'primeng/dataview';
-import { CarrierRow } from '../carriers.models';
+import { EmployeeRow } from '../employees.models';
 
 @Component({
-  selector: 'app-carriers-table',
+  selector: 'app-employees-table',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,14 +21,14 @@ import { CarrierRow } from '../carriers.models';
     <div class="card">
       <p-table
         #dt
-        [value]="carriers"
+        [value]="employees"
         dataKey="uuid"
         [paginator]="true"
         [rows]="10"
         [rowsPerPageOptions]="[10,20,50]"
         [loading]="loading"
         [lazy]="false"
-        class="shadow-sm rounded-lg overflow-hidden carriers-table"
+        class="shadow-sm rounded-lg overflow-hidden employees-table"
         [tableStyle]="{'min-width':'800px'}"
         responsiveLayout="scroll"
         [globalFilterFields]="['name', 'email', 'phone', 'status']"
@@ -91,13 +91,13 @@ import { CarrierRow } from '../carriers.models';
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="7" class="py-10 text-muted-color" style="text-align: center !important;">
-              Nenhum Transportadora encontrado
+              Nenhum Funcionário encontrado
             </td>
           </tr>
         </ng-template>
       </p-table>
 
-      <p-dataview *ngIf="mobile()" [value]="carriers" layout="list">
+      <p-dataview *ngIf="mobile()" [value]="employees" layout="list">
         <ng-template let-items #list>
           <div class="flex flex-col">
             <div *ngFor="let c of items; let i = index">
@@ -126,7 +126,7 @@ import { CarrierRow } from '../carriers.models';
   `,
   styles: `
     /* Alinhamento vertical consistente */
-    .carriers-table {
+    .employees-table {
 
       .p-datatable-thead > tr > th,
       .p-datatable-tbody > tr > td {
@@ -169,14 +169,14 @@ import { CarrierRow } from '../carriers.models';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarriersTableComponent {
+export class EmployeesTableComponent {
   @ViewChild('dt') dt?: Table;
 
-  @Input() carriers: CarrierRow[] = [];
+  @Input() employees: EmployeeRow[] = [];
   @Input() loading = false;
 
-  @Output() edit = new EventEmitter<CarrierRow>();
-  @Output() delete = new EventEmitter<CarrierRow>();
+  @Output() edit = new EventEmitter<EmployeeRow>();
+  @Output() delete = new EventEmitter<EmployeeRow>();
   @Output() selectionChange = new EventEmitter<string[]>();
 
   selected: string[] = [];
@@ -207,7 +207,7 @@ export class CarriersTableComponent {
       const w = window.open('', '_blank');
       if (!w) return;
 
-      const rows = this.carriers.map(s => `
+      const rows = this.employees.map(s => `
         <tr>
           <td>${s.name}</td>
           <td>${s.email}</td>
@@ -220,7 +220,7 @@ export class CarriersTableComponent {
       const html = `
         <html>
           <head>
-            <title>Transportadoras</title>
+            <title>Funcionários</title>
             <meta charset="utf-8" />
             <style>
               body { font-family: Arial, sans-serif; padding: 16px; }
@@ -231,7 +231,7 @@ export class CarriersTableComponent {
             </style>
           </head>
           <body>
-            <h1>Transportadoras</h1>
+            <h1>Funcionários</h1>
             <table>
               <thead>
                 <tr>

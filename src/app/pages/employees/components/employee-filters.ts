@@ -10,7 +10,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { Menu, MenuModule } from 'primeng/menu';
 
 @Component({
-  selector: 'app-carrier-filters',
+  selector: 'app-employee-filters',
   standalone: true,
   imports: [
     CommonModule,
@@ -37,7 +37,7 @@ import { Menu, MenuModule } from 'primeng/menu';
           <p-inputicon class="pi pi-search" />
         </p-iconfield>
 
-        <button pButton class="mr-4" label="Novo Transportadora" icon="pi pi-plus" (click)="create.emit()"></button>
+        <button pButton class="mr-4" label="Novo Funcionário" icon="pi pi-plus" (click)="create.emit()"></button>
 
         <button pButton type="button" label="Todas Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
       </ng-template>
@@ -87,7 +87,7 @@ import { Menu, MenuModule } from 'primeng/menu';
     <p-menu #actionsMenu [popup]="true" [model]="mobileActions"></p-menu>
   `
 })
-export class CarrierFiltersComponent {
+export class EmployeeFiltersComponent {
   @Input() search = '';
   @Input() selectedCount = 0;
 
@@ -150,6 +150,6 @@ export class CarrierFiltersComponent {
   }
 
   openCategories() {
-    void this.router.navigate(['/carriers/categories']);
+    void this.router.navigate(['/employees/categories']);
   }
 }

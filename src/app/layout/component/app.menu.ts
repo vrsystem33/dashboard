@@ -40,7 +40,7 @@ export class AppMenu {
                             { label: 'menu.products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
                             { label: 'menu.issuers', icon: 'pi pi-fw pi-file', routerLink: ['/orders'] },
                             { label: 'menu.paymentMethods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
-                            { label: 'menu.employees', icon: 'pi pi-fw pi-sitemap', routerLink: ['/orders'] },
+                            { label: 'menu.employees', icon: 'pi pi-fw pi-sitemap', routerLink: ['/employees'] },
                             { label: 'menu.users', icon: 'pi pi-fw pi-users', routerLink: ['/orders'] },
                         ]
                     },

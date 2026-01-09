@@ -3,50 +3,50 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, forkJoin, of } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/services/base.service';
-import { CarrierCreateRequestDto, CarrierRow, CarrierUpdateRequestDto } from './carriers.models';
-import { CarrierItemDto, CarrierListItemDto, toCarrier, toCarrierRow } from './carriers.mappers';
+import { EmployeeCreateRequestDto, EmployeeRow, EmployeeUpdateRequestDto } from './employees.models';
+import { EmployeeItemDto, EmployeeListItemDto, toEmployee, toEmployeeRow } from './employees.mappers';
 
 @Injectable({ providedIn: 'root' })
-export class CarriersService extends BaseService {
+export class EmployeesService extends BaseService {
   private readonly _loading$ = new BehaviorSubject<boolean>(false);
   readonly loading$ = this._loading$.asObservable();
 
-  private readonly _carriers$ = new BehaviorSubject<CarrierRow[]>([]);
-  readonly carriers$ = this._carriers$.asObservable();
+  private readonly _employees$ = new BehaviorSubject<EmployeeRow[]>([]);
+  readonly employees$ = this._employees$.asObservable();
 
-  private readonly resource: string = '/carriers';
+  private readonly resource: string = '/employees';
 
   constructor(http: HttpClient) {
     super(http);
   }
 
-  load(params?: Record<string, string | number | boolean | undefined | null>): Observable<CarrierRow[]> {
+  load(params?: Record<string, string | number | boolean | undefined | null>): Observable<EmployeeRow[]> {
     this._loading$.next(true);
     const httpParams = new HttpParams({ fromObject: this.buildParams(params) });
 
-    return this.get<CarrierListItemDto[]>(`${this.resource}`, { params: httpParams }).pipe(
-      map(list => (list ?? []).map(toCarrierRow)),
-      tap(rows => this._carriers$.next(rows)),
+    return this.get<EmployeeListItemDto[]>(`${this.resource}`, { params: httpParams }).pipe(
+      map(list => (list ?? []).map(toEmployeeRow)),
+      tap(rows => this._employees$.next(rows)),
       finalize(() => this._loading$.next(false))
     );
   }
 
-  getById(uuid: string): Observable<CarrierRow> {
+  getById(uuid: string): Observable<EmployeeRow> {
     this._loading$.next(true);
-    return this.get<CarrierItemDto>(`${this.resource}/${uuid}`).pipe(
-      map(toCarrier),
+    return this.get<EmployeeItemDto>(`${this.resource}/${uuid}`).pipe(
+      map(toEmployee),
       finalize(() => this._loading$.next(false))
     );
   }
 
-  create(payload: CarrierCreateRequestDto): Observable<unknown> {
+  create(payload: EmployeeCreateRequestDto): Observable<unknown> {
     this._loading$.next(true);
     return this.post<unknown>(`${this.resource}`, payload).pipe(
       finalize(() => this._loading$.next(false))
     );
   }
 
-  update(uuid: string, payload: CarrierUpdateRequestDto): Observable<unknown> {
+  update(uuid: string, payload: EmployeeUpdateRequestDto): Observable<unknown> {
     this._loading$.next(true);
     return this.put<unknown>(`${this.resource}/${uuid}`, payload).pipe(
       finalize(() => this._loading$.next(false))
@@ -66,7 +66,7 @@ export class CarriersService extends BaseService {
   }> {
     if (!uuids.length) {
       return of({
-        message: 'Nenhum Transportadora selecionado',
+        message: 'Nenhum Funcionário selecionado',
         deleted: 0,
       });
     }
@@ -87,7 +87,7 @@ export class CarriersService extends BaseService {
   removeMany(uuids: string[]): Observable<unknown> {
     if (!uuids.length) return of(null);
     this._loading$.next(true);
-    const deletions = uuids.map(id => this.delete<unknown>(`/carriers/${id}`));
+    const deletions = uuids.map(id => this.delete<unknown>(`/employees/${id}`));
 
     return forkJoin(deletions).pipe(
       finalize(() => this._loading$.next(false))

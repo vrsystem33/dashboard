@@ -20,7 +20,7 @@ export const appRoutes: Routes = [
             { path: 'products', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
             { path: 'issuers', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
             { path: 'payment-methods', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
-            { path: 'employees', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'employees', loadChildren: () => import('@app/pages/employees/employees.routes') },
             { path: 'users', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
 
 
