@@ -1,17 +1,15 @@
 export interface CarrierRow {
   uuid: string;
   status: boolean;
-  name: string;
+  tradeName: string;
   email: string;
   phone?: string | null;
   street?: string | null;
   city?: string | null;
   state?: string | null;
   categoryName?: string | null;
-  totalSales?: number | null;
-  totalSpent?: number | null;
   category_id?: number | null;
-  last_name?: string | null;
+  nameResponsible?: string | null;
   nickname?: string | null;
   identification?: string | null;
   secondary_phone?: string | null;
@@ -23,7 +21,7 @@ export interface CarrierRow {
 }
 
 export interface CarrierCreateRequestDto {
-  name: string;
+  trade_name: string;
   email: string;
   category_id: number;
   status?: boolean;
@@ -31,7 +29,7 @@ export interface CarrierCreateRequestDto {
   street?: string | null;
   city?: string | null;
   state?: string | null;
-  last_name?: string | null;
+  name_responsible?: string | null;
   nickname?: string | null;
   identification?: string | null;
   secondary_phone?: string | null;

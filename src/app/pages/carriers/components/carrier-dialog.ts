@@ -52,9 +52,9 @@ import { ToastService } from '@app/services/toast.service';
       <ng-template #content>
         <form [formGroup]="form" class="flex flex-col gap-6">
           <div>
-            <label for="name" class="block font-bold mb-2">Nome completo</label>
-            <input id="name" type="text" pInputText formControlName="name" class="w-full" placeholder="Digite o nome" />
-            <small class="text-red-500" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+            <label for="trade_name" class="block font-bold mb-2">Nome da Empresa</label>
+            <input id="trade_name" type="text" pInputText formControlName="trade_name" class="w-full" placeholder="Digite o nome" />
+            <small class="text-red-500" *ngIf="form.get('trade_name')?.invalid && form.get('trade_name')?.touched">
               O nome é obrigatório e deve ter pelo menos 3 caracteres.
             </small>
           </div>
@@ -123,8 +123,8 @@ import { ToastService } from '@app/services/toast.service';
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="md:mb-4 sm:mb-1">
-                    <label class="block font-bold mb-2" for="last_name">Sobrenome</label>
-                    <input id="last_name" type="text" pInputText formControlName="last_name" class="w-full" />
+                    <label class="block font-bold mb-2" for="name_responsible">Nome do Responsável</label>
+                    <input id="name_responsible" type="text" pInputText formControlName="name_responsible" class="w-full" />
                   </div>
                   <div class="md:mb-4 sm:mb-1">
                     <label class="block font-bold mb-2" for="nickname">Apelido</label>
@@ -234,12 +234,12 @@ export class CarrierDialogComponent implements OnChanges {
     private toast: ToastService
   ) {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      trade_name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
       category_id: [null, Validators.required],
       status: [true, Validators.required],
-      last_name: [''],
+      name_responsible: [''],
       nickname: [''],
       identification: [''],
       secondary_phone: [''],
@@ -257,12 +257,12 @@ export class CarrierDialogComponent implements OnChanges {
     if (changes['carrier']) {
       if (this.carrier) {
         this.form.reset({
-          name: this.carrier.name,
+          trade_name: this.carrier.tradeName,
           email: this.carrier.email,
           phone: this.carrier.phone ?? '',
           category_id: this.carrier.category_id ?? null,
           status: this.carrier.status,
-          last_name: this.carrier.last_name ?? '',
+          name_responsible: this.carrier.nameResponsible ?? '',
           nickname: this.carrier.nickname ?? '',
           identification: this.carrier.identification ?? '',
           secondary_phone: this.carrier.secondary_phone ?? '',
@@ -276,12 +276,12 @@ export class CarrierDialogComponent implements OnChanges {
         });
       } else {
         this.form.reset({
-          name: '',
+          trade_name: '',
           email: '',
           phone: '',
           category_id: null,
           status: true,
-          last_name: '',
+          name_responsible: '',
           nickname: '',
           identification: '',
           secondary_phone: '',

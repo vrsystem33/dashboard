@@ -2,7 +2,7 @@ import { CarrierRow } from './carriers.models';
 
 export interface CarrierListItemDto {
   uuid: string;
-  name: string;
+  trade_name: string;
   email: string;
   phone?: string | null;
   status?: boolean | null;
@@ -11,7 +11,7 @@ export interface CarrierListItemDto {
   state?: string | null;
   category_name?: string | null;
   category_id?: number | null;
-  last_name?: string | null;
+  name_responsible?: string | null;
   nickname?: string | null;
   identification?: string | null;
   secondary_phone?: string | null;
@@ -27,8 +27,8 @@ export interface CarrierItemDto {
   status?: boolean | null;
   category_id?: number | null;
   personal_info: {
-    name: string;
-    last_name?: string | null;
+    trade_name: string;
+    name_responsible?: string | null;
     nickname?: string | null;
     email: string;
     identification?: string | null;
@@ -51,7 +51,7 @@ export interface CarrierItemDto {
 export function toCarrierRow(dto: CarrierListItemDto): CarrierRow {
   return {
     uuid: dto.uuid ?? '',
-    name: dto.name ?? '',
+    tradeName: dto.trade_name ?? '',
     email: dto.email ?? '',
     phone: dto.phone ?? null,
     status: Boolean(dto.status),
@@ -60,7 +60,7 @@ export function toCarrierRow(dto: CarrierListItemDto): CarrierRow {
     state: dto.state ?? null,
     categoryName: dto.category_name ?? null,
     category_id: dto.category_id ?? null,
-    last_name: dto.last_name ?? null,
+    nameResponsible: dto.name_responsible ?? null,
     nickname: dto.nickname ?? null,
     identification: dto.identification ?? null,
     secondary_phone: dto.secondary_phone ?? null,
@@ -76,14 +76,14 @@ export function toCarrier(dto: CarrierItemDto): CarrierRow {
 
   return {
     uuid: dto.uuid ?? '',
-    name: dto.personal_info.name ?? '',
+    tradeName: dto.personal_info.trade_name ?? '',
     email: dto.personal_info.email ?? '',
     phone: dto.personal_info.phone ?? null,
     status: Boolean(dto.status),
     city: dto.address.city ?? null,
     state: dto.address.state ?? null,
     category_id: dto.category_id ?? null,
-    last_name: dto.personal_info.last_name ?? null,
+    nameResponsible: dto.personal_info.name_responsible ?? null,
     nickname: dto.personal_info.nickname ?? null,
     identification: dto.personal_info.identification ?? null,
     secondary_phone: dto.personal_info.secondary_phone ?? null,

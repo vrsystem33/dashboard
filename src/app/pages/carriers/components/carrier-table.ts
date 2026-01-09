@@ -42,9 +42,9 @@ import { CarrierRow } from '../carriers.models';
             <th style="width: 3rem">
               <p-tableHeaderCheckbox />
             </th>
-            <th pSortableColumn="name">
+            <th pSortableColumn="tradeName">
               Nome
-              <p-sortIcon field="name" />
+              <p-sortIcon field="tradeName" />
             </th>
             <th pSortableColumn="email">
               Email
@@ -71,7 +71,7 @@ import { CarrierRow } from '../carriers.models';
             <td style="width: 3rem">
               <p-tableCheckbox [value]="c" />
             </td>
-            <td>{{ c.name }}</td>
+            <td>{{ c.tradeName }}</td>
             <td>{{ c.email }}</td>
             <td>{{ c.phone || '-' }}</td>
             <td>
@@ -104,7 +104,7 @@ import { CarrierRow } from '../carriers.models';
               <div class="p-4 border-b border-surface flex flex-col gap-2">
                 <div class="flex justify-between items-center">
                   <div>
-                    <div class="font-bold">{{ c.name }}</div>
+                    <div class="font-bold">{{ c.tradeName }}</div>
                     <div class="text-sm text-muted">{{ c.email }}</div>
                     <div class="text-sm text-muted">{{ c.phone || '-' }}</div>
                   </div>
@@ -209,7 +209,7 @@ export class CarriersTableComponent {
 
       const rows = this.carriers.map(s => `
         <tr>
-          <td>${s.name}</td>
+          <td>${s.tradeName}</td>
           <td>${s.email}</td>
           <td>${s.phone ?? '-'}</td>
           <td>${s.status ? 'Ativo' : 'Inativo'}</td>

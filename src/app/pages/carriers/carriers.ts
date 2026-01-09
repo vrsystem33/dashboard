@@ -110,10 +110,10 @@ export class CarriersPage implements OnInit {
 
     if (!term) return this.carriers();
 
-    return this.carriers().filter(s =>
-      s.name.toLowerCase().includes(term) ||
-      s.email.toLowerCase().includes(term) ||
-      (s.phone ?? '').toLowerCase().includes(term)
+    return this.carriers().filter(c =>
+      c.tradeName.toLowerCase().includes(term) ||
+      c.email.toLowerCase().includes(term) ||
+      (c.phone ?? '').toLowerCase().includes(term)
     );
   });
 
