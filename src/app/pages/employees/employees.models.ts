@@ -7,10 +7,11 @@ export interface EmployeeRow {
   street?: string | null;
   city?: string | null;
   state?: string | null;
-  categoryName?: string | null;
+  role_id?: number | null;
+  roleName?: string | null;
+  roleDescription?: string | null;
   totalSales?: number | null;
   totalSpent?: number | null;
-  category_id?: number | null;
   last_name?: string | null;
   nickname?: string | null;
   identification?: string | null;
@@ -25,7 +26,7 @@ export interface EmployeeRow {
 export interface EmployeeCreateRequestDto {
   name: string;
   email: string;
-  category_id: number;
+  role_id: number;
   status?: boolean;
   phone?: string | null;
   street?: string | null;

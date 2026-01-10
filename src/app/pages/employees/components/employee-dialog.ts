@@ -13,6 +13,7 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angula
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { PanelModule } from 'primeng/panel';
 import { EmployeeCreateRequestDto, EmployeeRow, EmployeeUpdateRequestDto } from '../employees.models';
 import { take } from 'rxjs/operators';
@@ -33,6 +34,7 @@ import { ToastService } from '@app/services/toast.service';
     DialogModule,
     ReactiveFormsModule,
     InputTextModule,
+    InputNumberModule,
     ButtonModule,
     SelectModule,
     PanelModule,
@@ -73,29 +75,29 @@ import { ToastService } from '@app/services/toast.service';
           </div>
 
           <div>
-            <label for="category" class="block font-bold mb-2">Categoria</label>
+            <label for="role" class="block font-bold mb-2">Função</label>
             <div class="flex gap-2 items-center">
               <p-select
-                inputId="category"
-                formControlName="category_id"
+                inputId="role"
+                formControlName="role_id"
                 [options]="categories"
                 optionLabel="name"
                 optionValue="id"
-                placeholder="Selecione a categoria"
+                placeholder="Selecione a Função"
                 class="w-full"
                 appendTo="body"
               />
               <button
                 pButton
                 type="button"
-                label="Nova categoria"
+                label="Nova função"
                 icon="pi pi-plus"
                 class="p-button-outlined shrink-0"
                 (click)="openCategoryDialog()"
               ></button>
             </div>
-            <small class="text-red-500" *ngIf="form.get('category_id')?.invalid && form.get('category_id')?.touched">
-              A categoria é obrigatória.
+            <small class="text-red-500" *ngIf="form.get('role_id')?.invalid && form.get('role_id')?.touched">
+              A função é obrigatória.
             </small>
           </div>
 
@@ -111,6 +113,43 @@ import { ToastService } from '@app/services/toast.service';
               class="w-full"
               appendTo="body"
             />
+          </div>
+
+          <div class="md:col-span-1">
+            <label class="block font-bold mb-2" for="salary">Salário</label>
+            <p-inputnumber
+              id="salary"
+              formControlName="salary"
+              placeholder="Informe o salário"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+              fluid
+            />
+          </div>
+
+          <div>
+            <label for="schedule" class="block font-bold mb-2">Horário de Trabalho</label>
+            <div class="flex gap-2 items-center">
+              <p-select
+                inputId="schedule"
+                formControlName="schedule_id"
+                [options]="categories"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Selecione o Horário"
+                class="w-full"
+                appendTo="body"
+              />
+              <button
+                pButton
+                type="button"
+                label="Novo Horário"
+                icon="pi pi-plus"
+                class="p-button-outlined shrink-0"
+                (click)="openCategoryDialog()"
+              ></button>
+            </div>
           </div>
 
           <p-panel header="Mais informações" toggleable [collapsed]="showMoreInfo">
@@ -237,8 +276,10 @@ export class EmployeeDialogComponent implements OnChanges {
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
-      category_id: [null, Validators.required],
+      role_id: [null, Validators.required],
       status: [true, Validators.required],
+      salary: [null],
+      schedule_id: [null],
       last_name: [''],
       nickname: [''],
       identification: [''],
@@ -260,7 +301,7 @@ export class EmployeeDialogComponent implements OnChanges {
           name: this.employee.name,
           email: this.employee.email,
           phone: this.employee.phone ?? '',
-          category_id: this.employee.category_id ?? null,
+          role_id: this.employee.role_id ?? null,
           status: this.employee.status,
           last_name: this.employee.last_name ?? '',
           nickname: this.employee.nickname ?? '',
@@ -279,7 +320,7 @@ export class EmployeeDialogComponent implements OnChanges {
           name: '',
           email: '',
           phone: '',
-          category_id: null,
+          role_id: null,
           status: true,
           last_name: '',
           nickname: '',
@@ -311,7 +352,7 @@ export class EmployeeDialogComponent implements OnChanges {
       // ✅ RESET PROFISSIONAL
       this.form.reset({
         name: '',
-        category_id: null,
+        role_id: null,
       });
 
       // fecha seções extras
@@ -330,7 +371,7 @@ export class EmployeeDialogComponent implements OnChanges {
 
     this.form.reset({
       name: '',
-      category_id: null,
+      role_id: null,
     });
 
     this.showMoreInfo = true;
@@ -355,7 +396,7 @@ export class EmployeeDialogComponent implements OnChanges {
         this.toast.success('Sucesso', 'Categoria criada');
         this.categoryDialogVisible = false;
         if (category?.id) {
-          this.form.patchValue({ category_id: category.id });
+          this.form.patchValue({ role_id: category.id });
         }
         this.categoriesService.load().pipe(take(1)).subscribe();
       },

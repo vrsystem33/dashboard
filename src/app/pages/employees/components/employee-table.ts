@@ -58,9 +58,9 @@ import { EmployeeRow } from '../employees.models';
               Status
               <p-sortIcon field="status" />
             </th>
-            <th pSortableColumn="categoryName">
-              Categoria
-              <p-sortIcon field="categoryName" />
+            <th pSortableColumn="roleName">
+              Função
+              <p-sortIcon field="roleName" />
             </th>
             <th class="actions">Ações</th>
           </tr>
@@ -80,7 +80,7 @@ import { EmployeeRow } from '../employees.models';
                 [value]="c.status ? 'Ativo' : 'Inativo'
               "></p-tag>
             </td>
-            <td>{{ c.categoryName }}</td>
+            <td>{{ c.roleName | titlecase }}</td>
             <td class="actions">
               <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
               <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(c)"></button>
@@ -111,7 +111,7 @@ import { EmployeeRow } from '../employees.models';
                   <p-tag [severity]="c.status ? 'success' : 'danger'" [value]="c.status ? 'Ativo' : 'Inativo'"></p-tag>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span>{{ c.categoryName }}</span>
+                  <span>{{ c.roleName }}</span>
                 </div>
                 <div class="flex gap-2 justify-end">
                   <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(c)"></button>
@@ -213,7 +213,7 @@ export class EmployeesTableComponent {
           <td>${s.email}</td>
           <td>${s.phone ?? '-'}</td>
           <td>${s.status ? 'Ativo' : 'Inativo'}</td>
-          <td style="text-align:right">${s.categoryName}</td>
+          <td style="text-align:right">${s.roleName}</td>
         </tr>
       `).join('');
 

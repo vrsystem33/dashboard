@@ -38,7 +38,7 @@ import { Menu, MenuModule } from 'primeng/menu';
         </p-iconfield>
 
         <button pButton class="mr-4" label="Nova Categoria" icon="pi pi-plus" (click)="create.emit()"></button>
-        <button pButton type="button" label="Transportadoras" icon="pi pi-truck" class="p-button-outlined shrink-0" (click)="this.openCustomers()"></button>
+        <button pButton type="button" label="Transportadoras" icon="pi pi-truck" class="p-button-outlined shrink-0" (click)="this.openCarriers()"></button>
       </ng-template>
 
       <ng-template #end>
@@ -96,9 +96,9 @@ export class CategoryFiltersComponent {
 
   mobileActions = [
     {
-      label: 'Clientes',
+      label: 'Transportadoras',
       icon: 'pi pi-tags',
-      command: () => this.openCustomers()
+      command: () => this.openCarriers()
     },
   ];
 
@@ -124,7 +124,7 @@ export class CategoryFiltersComponent {
     this.actionsMenu.toggle(event);
   }
 
-  openCustomers() {
-    void this.router.navigate(['/customers']);
+  openCarriers() {
+    void this.router.navigate(['/carriers']);
   }
 }

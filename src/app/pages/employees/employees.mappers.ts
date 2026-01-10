@@ -9,8 +9,9 @@ export interface EmployeeListItemDto {
   street?: string | null;
   city?: string | null;
   state?: string | null;
-  category_name?: string | null;
-  category_id?: number | null;
+  role_description?: string | null;
+  role_name?: string | null;
+  role_id?: number | null;
   last_name?: string | null;
   nickname?: string | null;
   identification?: string | null;
@@ -25,7 +26,7 @@ export interface EmployeeListItemDto {
 export interface EmployeeItemDto {
   uuid: string;
   status?: boolean | null;
-  category_id?: number | null;
+  role_id?: number | null;
   personal_info: {
     name: string;
     last_name?: string | null;
@@ -58,8 +59,9 @@ export function toEmployeeRow(dto: EmployeeListItemDto): EmployeeRow {
     street: dto.street ?? null,
     city: dto.city ?? null,
     state: dto.state ?? null,
-    categoryName: dto.category_name ?? null,
-    category_id: dto.category_id ?? null,
+    roleDescription: dto.role_description ?? null,
+    roleName: dto.role_name ?? null,
+    role_id: dto.role_id ?? null,
     last_name: dto.last_name ?? null,
     nickname: dto.nickname ?? null,
     identification: dto.identification ?? null,
@@ -82,7 +84,7 @@ export function toEmployee(dto: EmployeeItemDto): EmployeeRow {
     status: Boolean(dto.status),
     city: dto.address.city ?? null,
     state: dto.address.state ?? null,
-    category_id: dto.category_id ?? null,
+    role_id: dto.role_id ?? null,
     last_name: dto.personal_info.last_name ?? null,
     nickname: dto.personal_info.nickname ?? null,
     identification: dto.personal_info.identification ?? null,

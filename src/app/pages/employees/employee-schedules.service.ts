@@ -4,59 +4,61 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/services/base.service';
 
-export interface EmployeeCategory {
+export interface EmployeeSchedule {
   id: number;
   name: string;
-  description?: string;
+  start_time?: string;
+  end_time?: string;
   status: boolean;
 }
 
-export interface EmployeeCategoryCreateRequestDto {
+export interface EmployeeScheduleCreateRequestDto {
   name: string;
-  description?: string;
-  status?: boolean;
+  start_time: string;
+  end_time: string;
+  status: boolean;
 }
 
-export type EmployeeCategoryUpdateRequestDto = Partial<EmployeeCategoryCreateRequestDto>;
+export type EmployeeScheduleUpdateRequestDto = Partial<EmployeeScheduleCreateRequestDto>;
 
 @Injectable({ providedIn: 'root' })
-export class EmployeeCategoriesService extends BaseService {
+export class EmployeeSchedulesService extends BaseService {
   private readonly _loading$ = new BehaviorSubject<boolean>(false);
   readonly loading$ = this._loading$.asObservable();
 
-  private readonly _categories$ = new BehaviorSubject<EmployeeCategory[]>([]);
-  readonly categories$ = this._categories$.asObservable();
+  private readonly _schedules$ = new BehaviorSubject<EmployeeSchedule[]>([]);
+  readonly schedules$ = this._schedules$.asObservable();
 
-  private readonly resource = '/employees/roles';
+  private readonly resource = '/employees/schedules';
 
   constructor(http: HttpClient) {
     super(http);
   }
 
-  load(): Observable<EmployeeCategory[]> {
+  load(): Observable<EmployeeSchedule[]> {
     this._loading$.next(true);
-    return this.get<EmployeeCategory[]>(this.resource).pipe(
-      tap(categories => this._categories$.next(categories ?? [])),
+    return this.get<EmployeeSchedule[]>(this.resource).pipe(
+      tap(schedules => this._schedules$.next(schedules ?? [])),
       finalize(() => this._loading$.next(false))
     );
   }
 
-  create(payload: EmployeeCategoryCreateRequestDto): Observable<EmployeeCategory> {
+  create(payload: EmployeeScheduleCreateRequestDto): Observable<EmployeeSchedule> {
     this._loading$.next(true);
-    return this.post<EmployeeCategory>(this.resource, payload).pipe(
-      tap(category => this._categories$.next([...this._categories$.value, category])),
+    return this.post<EmployeeSchedule>(this.resource, payload).pipe(
+      tap(category => this._schedules$.next([...this._schedules$.value, category])),
       finalize(() => this._loading$.next(false))
     );
   }
 
-  update(id: number, payload: EmployeeCategoryUpdateRequestDto): Observable<EmployeeCategory> {
+  update(id: number, payload: EmployeeScheduleUpdateRequestDto): Observable<EmployeeSchedule> {
     this._loading$.next(true);
-    return this.put<EmployeeCategory>(`${this.resource}/${id}`, payload).pipe(
+    return this.put<EmployeeSchedule>(`${this.resource}/${id}`, payload).pipe(
       tap((updated) => {
-        const next = this._categories$.value.map(category =>
+        const next = this._schedules$.value.map(category =>
           category.id === id ? updated : category
         );
-        this._categories$.next(next);
+        this._schedules$.next(next);
       }),
       finalize(() => this._loading$.next(false))
     );
@@ -66,7 +68,7 @@ export class EmployeeCategoriesService extends BaseService {
     this._loading$.next(true);
     return this.delete<void>(`${this.resource}/${id}`).pipe(
       tap(() => {
-        this._categories$.next(this._categories$.value.filter(category => category.id !== id));
+        this._schedules$.next(this._schedules$.value.filter(category => category.id !== id));
       }),
       finalize(() => this._loading$.next(false))
     );

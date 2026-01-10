@@ -10,7 +10,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { Menu, MenuModule } from 'primeng/menu';
 
 @Component({
-  selector: 'app-category-filters',
+  selector: 'app-schedule-filters',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,13 +31,13 @@ import { Menu, MenuModule } from 'primeng/menu';
             pInputText
             [(ngModel)]="search"
             (ngModelChange)="searchChange.emit($event)"
-            placeholder="Buscar por nome ou descrição"
+            placeholder="Buscar por nome"
             class="w-full md:w-80"
           />
           <p-inputicon class="pi pi-search" />
         </p-iconfield>
 
-        <button pButton class="mr-4" label="Nova Categoria" icon="pi pi-plus" (click)="create.emit()"></button>
+        <button pButton class="mr-4" label="Novo Horário" icon="pi pi-plus" (click)="create.emit()"></button>
         <button pButton type="button" label="Funcionários" icon="pi pi-sitemap" class="p-button-outlined shrink-0" (click)="this.openEmployees()"></button>
       </ng-template>
 
@@ -55,7 +55,7 @@ import { Menu, MenuModule } from 'primeng/menu';
           pInputText
           [(ngModel)]="search"
           (ngModelChange)="searchChange.emit($event)"
-          placeholder="Buscar categoria"
+          placeholder="Buscar horário"
           class="w-full"
         />
         <p-inputicon class="pi pi-search" />
@@ -84,7 +84,7 @@ import { Menu, MenuModule } from 'primeng/menu';
     <p-menu #actionsMenu [popup]="true" [model]="mobileActions"></p-menu>
   `
 })
-export class CategoryFiltersComponent {
+export class ScheduleFiltersComponent {
   @Input() search = '';
   @Input() selectedCount = 0;
 

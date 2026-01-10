@@ -7,7 +7,7 @@ import { selectRole } from '@app/core/auth/auth.selectors';
 
 @Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivate {
-  constructor(private store: Store, private router: Router) {}
+  constructor(private store: Store, private router: Router) { }
   canActivate(route: any) {
     const required: string[] = route.data?.roles ?? [];
     return this.store.select(selectRole).pipe(

@@ -113,6 +113,7 @@ export class EmployeesPage implements OnInit {
     return this.employees().filter(s =>
       s.name.toLowerCase().includes(term) ||
       s.email.toLowerCase().includes(term) ||
+      (s.roleName ?? '').toLowerCase().includes(term) ||
       (s.phone ?? '').toLowerCase().includes(term)
     );
   });

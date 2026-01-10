@@ -39,7 +39,12 @@ import { Menu, MenuModule } from 'primeng/menu';
 
         <button pButton class="mr-4" label="Novo Funcionário" icon="pi pi-plus" (click)="create.emit()"></button>
 
-        <button pButton type="button" label="Todas Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
+        <button
+          pButton
+          icon="pi pi-ellipsis-v"
+          class="p-button-outlined"
+          (click)="toggleDesktopActions($event)">
+        </button>
       </ng-template>
 
       <ng-template #end>
@@ -85,6 +90,7 @@ import { Menu, MenuModule } from 'primeng/menu';
     </div>
 
     <p-menu #actionsMenu [popup]="true" [model]="mobileActions"></p-menu>
+    <p-menu #actionsDesktopMenu [popup]="true" [model]="desktopActions"></p-menu>
   `
 })
 export class EmployeeFiltersComponent {
@@ -99,12 +105,18 @@ export class EmployeeFiltersComponent {
   @Output() exportPdf = new EventEmitter<void>();
 
   @ViewChild('actionsMenu') actionsMenu!: Menu;
+  @ViewChild('actionsDesktopMenu') actionsDesktopMenu!: Menu;
 
   mobileActions = [
     {
-      label: 'Categorias',
+      label: 'Funções',
       icon: 'pi pi-tags',
-      command: () => this.openCategories()
+      command: () => this.openRoles()
+    },
+    {
+      label: 'Horários',
+      icon: 'pi pi-clock',
+      command: () => this.openRoles()
     },
     {
       label: 'Exportar CSV',
@@ -125,6 +137,19 @@ export class EmployeeFiltersComponent {
     //   disabled: !this.selectedCount,
     //   command: () => this.deleteSelected.emit()
     // }
+  ];
+
+  desktopActions = [
+    {
+      label: 'Funções',
+      icon: 'pi pi-tags',
+      command: () => this.openRoles()
+    },
+    {
+      label: 'Horários',
+      icon: 'pi pi-clock',
+      command: () => this.openSchedules()
+    },
   ];
 
   mobile = signal(false);
@@ -149,7 +174,22 @@ export class EmployeeFiltersComponent {
     this.actionsMenu.toggle(event);
   }
 
-  openCategories() {
-    void this.router.navigate(['/employees/categories']);
+  toggleDesktopActions(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!this.actionsDesktopMenu) {
+      return;
+    }
+
+    this.actionsDesktopMenu.toggle(event);
+  }
+
+  openRoles() {
+    void this.router.navigate(['/employees/roles']);
+  }
+
+  openSchedules() {
+    void this.router.navigate(['/employees/schedules']);
   }
 }
