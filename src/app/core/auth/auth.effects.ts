@@ -2,7 +2,20 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, switchMap, tap, take, exhaustMap, withLatestFrom, timer, finalize } from 'rxjs';
+import {
+  catchError,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  tap,
+  take,
+  exhaustMap,
+  withLatestFrom,
+  timer,
+  finalize,
+  retry
+} from 'rxjs';
 
 import { AuthService } from '@app/services/auth.service';
 import { TokenService } from '@app/services/token.service';
@@ -87,13 +100,13 @@ export class AuthEffects {
 
         return timer(due).pipe(
           map(() => AuthActions.refreshRequested()),
-              // se um novo refresh concluir ou se der logout antes do timer, cancela
-              // (evita timers órfãos e re-agendamentos redundantes)
-              take(1)
-          );
-        })
-      )
-    );
+          // se um novo refresh concluir ou se der logout antes do timer, cancela
+          // (evita timers órfãos e re-agendamentos redundantes)
+          take(1)
+        );
+      })
+    )
+  );
 
   refresh$ = createEffect(() =>
     this.actions$.pipe(
@@ -126,7 +139,7 @@ export class AuthEffects {
         const tokens = this.tokenService.getTokens();
         return tokens?.refresh_token
           ? AuthActions.refreshRequested()
-          : AuthActions.logoutRequested();
+          : AuthActions.forceLogout();
       })
     )
   );
@@ -152,12 +165,24 @@ export class AuthEffects {
         const tokens = this.tokenService.getTokens();
         return this.auth.logout(tokens ? { refresh_token: tokens.refresh_token } : { refresh_token: '' })
           .pipe(
+            retry(2),
             map(() => AuthActions.logoutSucceeded()),
-            catchError(err => of(AuthActions.logoutFailed({ error: err.message ?? 'Logout failed' }))),
+            catchError(err => of(AuthActions.forceLogout())),
             finalize(() => this.spinner.hide())
           );
       })
     )
+  );
+
+  forceLogout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.forceLogout),
+      tap(() => {
+        this.tokenService.clear();
+        this.router.navigateByUrl('auth/login');
+      })
+    ),
+    { dispatch: false }
   );
 
   // Após logout, limpar storage e ir ao login
@@ -168,5 +193,16 @@ export class AuthEffects {
       tap(() => this.router.navigateByUrl('auth/login'))
     ),
     { dispatch: false }
+  );
+
+  resetUnauthorizedLock$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        AuthActions.refreshSucceeded,
+        AuthActions.forceLogout,
+        AuthActions.logoutSucceeded
+      ),
+      map(() => AuthActions.authFlowFinished())
+    )
   );
 }

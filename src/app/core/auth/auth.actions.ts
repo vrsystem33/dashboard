@@ -17,4 +17,5 @@ export const refreshFailed   = createAction('[Auth] Refresh Failed', props<{ err
 export const unauthorized    = createAction('[Auth] Unauthorized'); // disparado pelo ErrorInterceptor 401
 export const logoutRequested = createAction('[Auth] Logout Requested');
 export const logoutSucceeded = createAction('[Auth] Logout Succeeded');
-export const logoutFailed    = createAction('[Auth] Logout Failed', props<{ error: string }>());
+export const forceLogout     = createAction('[Auth] Force Logout');
+export const authFlowFinished = createAction('[Auth] Auth Flow Finished');

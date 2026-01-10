@@ -2,18 +2,26 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
 import { auditTime, catchError } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { ActionsSubject, Store } from '@ngrx/store';
 import * as AuthActions from '@app/core/auth/auth.actions';
 import { ToastService } from '@app/services/toast.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   private unauthorized$ = new Subject<void>();
+  private isHandlingUnauthorized: boolean = false;
 
   constructor(
     private store: Store,
     private toast: ToastService,
+    private actions$: ActionsSubject,
   ) {
+    this.actions$.subscribe(action => {
+      if (action.type === '[Auth] Auth Flow Finished') {
+        this.isHandlingUnauthorized = false;
+      }
+    });
+
     this.unauthorized$.pipe(auditTime(0)).subscribe(() => {
       this.store.dispatch(AuthActions.unauthorized());
     });
@@ -39,8 +47,12 @@ export class ErrorInterceptor implements HttpInterceptor {
           case 401:
             message = apiMessage || 'Não autorizado. Faça login novamente.';
 
-            if (!req.url.includes('/auth/login')) {
-              this.unauthorized$.next();
+            if (!this.isHandlingUnauthorized) {
+              this.isHandlingUnauthorized = true;
+
+              if (!req.url.includes('/auth/login') && !req.url.includes('/auth/refresh')) {
+                this.unauthorized$.next();
+              }
             }
 
             break;
