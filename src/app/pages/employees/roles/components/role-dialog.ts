@@ -14,13 +14,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import {
-  EmployeeCategory,
-  EmployeeCategoryCreateRequestDto,
-  EmployeeCategoryUpdateRequestDto
-} from '../../employee-categories.service';
+  EmployeeRole,
+  EmployeeRoleCreateRequestDto,
+  EmployeeRoleUpdateRequestDto
+} from '../../employee-roles.service';
 
 @Component({
-  selector: 'app-category-dialog',
+  selector: 'app-role-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -38,7 +38,7 @@ import {
       [draggable]="false"
       [resizable]="false"
       [closable]="true"
-      [header]="category ? 'Editar Categoria' : 'Nova Categoria'"
+      [header]="role ? 'Editar Função' : 'Nova Função'"
       (onHide)="cancel.emit()"
     >
       <ng-template #content>
@@ -59,7 +59,7 @@ import {
               pInputText
               formControlName="description"
               class="w-full"
-              placeholder="Descreva a categoria"
+              placeholder="Descreva a função"
             />
           </div>
 
@@ -87,10 +87,10 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryDialogComponent implements OnChanges {
+export class RoleDialogComponent implements OnChanges {
   @Input() visible = false;
-  @Input() category: EmployeeCategory | null = null;
-  @Output() save = new EventEmitter<EmployeeCategoryCreateRequestDto | EmployeeCategoryUpdateRequestDto>();
+  @Input() role: EmployeeRole | null = null;
+  @Output() save = new EventEmitter<EmployeeRoleCreateRequestDto | EmployeeRoleUpdateRequestDto>();
   @Output() cancel = new EventEmitter<void>();
 
   statuses = [
@@ -109,12 +109,12 @@ export class CategoryDialogComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['category']) {
-      if (this.category) {
+    if (changes['role']) {
+      if (this.role) {
         this.form.reset({
-          name: this.category.name,
-          description: this.category.description ?? '',
-          status: this.category.status,
+          name: this.role.name,
+          description: this.role.description ?? '',
+          status: this.role.status,
         });
       } else {
         this.form.reset({
@@ -136,7 +136,7 @@ export class CategoryDialogComponent implements OnChanges {
   }
 
   onCloseForm() {
-    if (!this.category) {
+    if (!this.role) {
       this.form.reset({
         name: '',
         description: '',
@@ -150,7 +150,7 @@ export class CategoryDialogComponent implements OnChanges {
     this.cancel.emit();
   }
 
-  private buildPayload(): EmployeeCategoryCreateRequestDto | EmployeeCategoryUpdateRequestDto {
+  private buildPayload(): EmployeeRoleCreateRequestDto | EmployeeRoleUpdateRequestDto {
     const value = this.form.getRawValue();
     const normalizedEntries = Object.entries(value).reduce<Record<string, unknown>>((acc, [key, v]) => {
       acc[key] = typeof v === 'string' ? v.trim() || null : v;
@@ -161,6 +161,6 @@ export class CategoryDialogComponent implements OnChanges {
       Object.entries(normalizedEntries).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
     ) as Record<string, unknown>;
 
-    return cleaned as EmployeeCategoryCreateRequestDto | EmployeeCategoryUpdateRequestDto;
+    return cleaned as EmployeeRoleCreateRequestDto | EmployeeRoleUpdateRequestDto;
   }
 }

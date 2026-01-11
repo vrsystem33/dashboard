@@ -8,23 +8,34 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+
+import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { PanelModule } from 'primeng/panel';
-import { EmployeeCreateRequestDto, EmployeeRow, EmployeeUpdateRequestDto } from '../employees.models';
+
 import { take } from 'rxjs/operators';
-import { CategoryDialogComponent } from '../categories/components/category-dialog';
-import {
-  EmployeeCategoriesService,
-  EmployeeCategory,
-  EmployeeCategoryCreateRequestDto,
-  EmployeeCategoryUpdateRequestDto
-} from '../employee-categories.service';
+
 import { ToastService } from '@app/services/toast.service';
+import { EmployeeCreateRequestDto, EmployeeRow, EmployeeUpdateRequestDto } from '../employees.models';
+import { RoleDialogComponent } from '../roles/components/role-dialog';
+import { ScheduleDialogComponent } from '../schedules/components/schedule-dialog';
+import {
+  EmployeeRolesService,
+  EmployeeRole,
+  EmployeeRoleCreateRequestDto,
+  EmployeeRoleUpdateRequestDto
+} from '../employee-roles.service';
+import {
+  EmployeeSchedule,
+  EmployeeScheduleCreateRequestDto,
+  EmployeeSchedulesService,
+  EmployeeScheduleUpdateRequestDto
+} from '../employee-schedules.service';
+
 
 @Component({
   selector: 'app-employee-dialog',
@@ -38,7 +49,8 @@ import { ToastService } from '@app/services/toast.service';
     ButtonModule,
     SelectModule,
     PanelModule,
-    CategoryDialogComponent,
+    RoleDialogComponent,
+    ScheduleDialogComponent,
   ],
   template: `
     <p-dialog
@@ -48,7 +60,7 @@ import { ToastService } from '@app/services/toast.service';
       [draggable]="false"
       [resizable]="false"
       [closable]="true"
-      [header]="employee ? 'Editar Transportadora' : 'Novo Transportadora'"
+      [header]="employee ? 'Editar Funcionário' : 'Novo Funcionário'"
       (onHide)="cancel.emit()"
     >
       <ng-template #content>
@@ -80,7 +92,7 @@ import { ToastService } from '@app/services/toast.service';
               <p-select
                 inputId="role"
                 formControlName="role_id"
-                [options]="categories"
+                [options]="roles"
                 optionLabel="name"
                 optionValue="id"
                 placeholder="Selecione a Função"
@@ -93,7 +105,7 @@ import { ToastService } from '@app/services/toast.service';
                 label="Nova função"
                 icon="pi pi-plus"
                 class="p-button-outlined shrink-0"
-                (click)="openCategoryDialog()"
+                (click)="openRoleDialog()"
               ></button>
             </div>
             <small class="text-red-500" *ngIf="form.get('role_id')?.invalid && form.get('role_id')?.touched">
@@ -134,9 +146,9 @@ import { ToastService } from '@app/services/toast.service';
               <p-select
                 inputId="schedule"
                 formControlName="schedule_id"
-                [options]="categories"
+                [options]="schedules"
                 optionLabel="name"
-                optionValue="id"
+                optionValue="uuid"
                 placeholder="Selecione o Horário"
                 class="w-full"
                 appendTo="body"
@@ -147,7 +159,7 @@ import { ToastService } from '@app/services/toast.service';
                 label="Novo Horário"
                 icon="pi pi-plus"
                 class="p-button-outlined shrink-0"
-                (click)="openCategoryDialog()"
+                (click)="openScheduleDialog()"
               ></button>
             </div>
           </div>
@@ -241,19 +253,28 @@ import { ToastService } from '@app/services/toast.service';
       </ng-template>
     </p-dialog>
 
-    <app-category-dialog
-      [visible]="categoryDialogVisible"
-      [category]="null"
-      (cancel)="closeCategoryDialog()"
-      (save)="createCategory($event)">
-    </app-category-dialog>
+    <app-role-dialog
+      [visible]="roleDialogVisible"
+      [role]="null"
+      (cancel)="closeRoleDialog()"
+      (save)="createRole($event)">
+    </app-role-dialog>
+
+    <app-schedule-dialog
+      [visible]="scheduleDialogVisible"
+      [schedule]="null"
+      (cancel)="closeScheduleDialog()"
+      (save)="createSchedule($event)">
+    </app-schedule-dialog>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDialogComponent implements OnChanges {
   @Input() visible = false;
   @Input() employee: EmployeeRow | null = null;
-  @Input() categories: EmployeeCategory[] = [];
+  @Input() roles: EmployeeRole[] = [];
+  @Input() schedules: EmployeeSchedule[] = [];
+
   @Output() save = new EventEmitter<EmployeeCreateRequestDto | EmployeeUpdateRequestDto>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -262,14 +283,16 @@ export class EmployeeDialogComponent implements OnChanges {
     { name: 'Inativo', code: false }
   ];
 
-  public showMoreInfo: boolean = true;
-  categoryDialogVisible = false;
+  showMoreInfo: boolean = true;
+  roleDialogVisible: boolean = false;
+  scheduleDialogVisible: boolean = false;
 
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private categoriesService: EmployeeCategoriesService,
+    private rolesService: EmployeeRolesService,
+    private schedulesService: EmployeeSchedulesService,
     private toast: ToastService
   ) {
     this.form = this.fb.group({
@@ -296,12 +319,14 @@ export class EmployeeDialogComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['employee']) {
+      console.log("🚀 ~ EmployeeDialogComponent ~ ngOnChanges ~ this.employee:", this.employee)
       if (this.employee) {
         this.form.reset({
           name: this.employee.name,
           email: this.employee.email,
           phone: this.employee.phone ?? '',
           role_id: this.employee.role_id ?? null,
+          schedule_id: this.employee.schedule_id ?? null,
           status: this.employee.status,
           last_name: this.employee.last_name ?? '',
           nickname: this.employee.nickname ?? '',
@@ -321,6 +346,7 @@ export class EmployeeDialogComponent implements OnChanges {
           email: '',
           phone: '',
           role_id: null,
+          schedule_id: null,
           status: true,
           last_name: '',
           nickname: '',
@@ -353,6 +379,7 @@ export class EmployeeDialogComponent implements OnChanges {
       this.form.reset({
         name: '',
         role_id: null,
+        schedule_id: null,
       });
 
       // fecha seções extras
@@ -372,6 +399,7 @@ export class EmployeeDialogComponent implements OnChanges {
     this.form.reset({
       name: '',
       role_id: null,
+      schedule_id: null,
     });
 
     this.showMoreInfo = true;
@@ -382,23 +410,47 @@ export class EmployeeDialogComponent implements OnChanges {
     this.cancel.emit()
   }
 
-  openCategoryDialog() {
-    this.categoryDialogVisible = true;
+  openRoleDialog() {
+    this.roleDialogVisible = true;
   }
 
-  closeCategoryDialog() {
-    this.categoryDialogVisible = false;
+  closeRoleDialog() {
+    this.roleDialogVisible = false;
   }
 
-  createCategory(payload: EmployeeCategoryCreateRequestDto | EmployeeCategoryUpdateRequestDto) {
-    this.categoriesService.create(payload as EmployeeCategoryCreateRequestDto).pipe(take(1)).subscribe({
-      next: (category) => {
+  openScheduleDialog() {
+    this.scheduleDialogVisible = true;
+  }
+
+  closeScheduleDialog() {
+    this.scheduleDialogVisible = false;
+  }
+
+  createRole(payload: EmployeeRoleCreateRequestDto | EmployeeRoleUpdateRequestDto) {
+    this.rolesService.create(payload as EmployeeRoleCreateRequestDto).pipe(take(1)).subscribe({
+      next: (role) => {
         this.toast.success('Sucesso', 'Categoria criada');
-        this.categoryDialogVisible = false;
-        if (category?.id) {
-          this.form.patchValue({ role_id: category.id });
+        this.roleDialogVisible = false;
+        if (role?.id) {
+          this.form.patchValue({ role_id: role.id });
         }
-        this.categoriesService.load().pipe(take(1)).subscribe();
+        this.rolesService.load().pipe(take(1)).subscribe();
+      },
+      error: (e) => {
+        this.toast.error('Error', e);
+      }
+    });
+  }
+
+  createSchedule(payload: EmployeeScheduleCreateRequestDto | EmployeeScheduleUpdateRequestDto) {
+    this.schedulesService.create(payload as EmployeeScheduleCreateRequestDto).pipe(take(1)).subscribe({
+      next: (schedule) => {
+        this.toast.success('Sucesso', 'Categoria criada');
+        this.scheduleDialogVisible = false;
+        if (schedule?.id) {
+          this.form.patchValue({ schedule_id: schedule.id });
+        }
+        this.schedulesService.load().pipe(take(1)).subscribe();
       },
       error: (e) => {
         this.toast.error('Error', e);

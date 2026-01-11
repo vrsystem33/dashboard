@@ -39,7 +39,7 @@ import { Menu, MenuModule } from 'primeng/menu';
 
         <button pButton class="mr-4" label="Novo Cliente" icon="pi pi-plus" (click)="create.emit()"></button>
 
-        <button pButton type="button" label="Todas Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
+        <button pButton type="button" label="Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
       </ng-template>
 
       <ng-template #end>

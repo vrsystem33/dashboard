@@ -27,6 +27,7 @@ export interface EmployeeItemDto {
   uuid: string;
   status?: boolean | null;
   role_id?: number | null;
+  schedule_id?: string | null;
   personal_info: {
     name: string;
     last_name?: string | null;
@@ -85,6 +86,7 @@ export function toEmployee(dto: EmployeeItemDto): EmployeeRow {
     city: dto.address.city ?? null,
     state: dto.address.state ?? null,
     role_id: dto.role_id ?? null,
+    schedule_id: dto.schedule_id ?? null,
     last_name: dto.personal_info.last_name ?? null,
     nickname: dto.personal_info.nickname ?? null,
     identification: dto.personal_info.identification ?? null,

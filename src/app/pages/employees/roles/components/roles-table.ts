@@ -4,10 +4,10 @@ import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DataViewModule } from 'primeng/dataview';
-import { EmployeeCategory } from '../../employee-categories.service';
+import { EmployeeRole } from '../../employee-roles.service';
 
 @Component({
-  selector: 'app-categories-table',
+  selector: 'app-roles-table',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,14 +20,14 @@ import { EmployeeCategory } from '../../employee-categories.service';
     <div class="card">
       <p-table
         #dt
-        [value]="categories"
+        [value]="roles"
         dataKey="id"
         [paginator]="true"
         [rows]="10"
         [rowsPerPageOptions]="[10,20,50]"
         [loading]="loading"
         [lazy]="false"
-        class="shadow-sm rounded-lg overflow-hidden categories-table"
+        class="shadow-sm rounded-lg overflow-hidden roles-table"
         [tableStyle]="{'min-width':'700px'}"
         responsiveLayout="scroll"
         [globalFilterFields]="['name', 'description', 'status']"
@@ -57,46 +57,46 @@ import { EmployeeCategory } from '../../employee-categories.service';
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-category>
+        <ng-template pTemplate="body" let-role>
           <tr>
             <td style="width: 3rem">
-              <p-tableCheckbox [value]="category" />
+              <p-tableCheckbox [value]="role" />
             </td>
-            <td>{{ category.name }}</td>
-            <td>{{ category.description || '-' }}</td>
+            <td>{{ role.name }}</td>
+            <td>{{ role.description || '-' }}</td>
             <td>
               <p-tag
-                [severity]="category.status ? 'success' : 'danger'"
-                [value]="category.status ? 'Ativo' : 'Inativo'"
+                [severity]="role.status ? 'success' : 'danger'"
+                [value]="role.status ? 'Ativo' : 'Inativo'"
               ></p-tag>
             </td>
             <td class="actions">
-              <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(category)"></button>
-              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(category)"></button>
+              <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(role)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(role)"></button>
             </td>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-          <tr><td colspan="5" class="py-10 text-muted-color" style="text-align: center !important;">Nenhuma categoria encontrada</td></tr>
+          <tr><td colspan="5" class="py-10 text-muted-color" style="text-align: center !important;">Nenhuma função encontrada</td></tr>
         </ng-template>
       </p-table>
 
-      <p-dataview *ngIf="mobile()" [value]="categories" layout="list">
+      <p-dataview *ngIf="mobile()" [value]="roles" layout="list">
         <ng-template let-items #list>
           <div class="flex flex-col">
-            <div *ngFor="let category of items; let i = index">
+            <div *ngFor="let role of items; let i = index">
               <div class="p-4 border-b border-surface flex flex-col gap-2">
                 <div class="flex justify-between items-center">
                   <div>
-                    <div class="font-bold">{{ category.name }}</div>
-                    <div class="text-sm text-muted">{{ category.description || '-' }}</div>
+                    <div class="font-bold">{{ role.name }}</div>
+                    <div class="text-sm text-muted">{{ role.description || '-' }}</div>
                   </div>
-                  <p-tag [severity]="category.status ? 'success' : 'danger'" [value]="category.status ? 'Ativo' : 'Inativo'"></p-tag>
+                  <p-tag [severity]="role.status ? 'success' : 'danger'" [value]="role.status ? 'Ativo' : 'Inativo'"></p-tag>
                 </div>
                 <div class="flex gap-2 justify-end">
-                  <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(category)"></button>
-                  <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(category)"></button>
+                  <button pButton icon="pi pi-pencil" class="p-button-text" (click)="edit.emit(role)"></button>
+                  <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete.emit(role)"></button>
                 </div>
               </div>
             </div>
@@ -106,7 +106,7 @@ import { EmployeeCategory } from '../../employee-categories.service';
     </div>
   `,
   styles: `
-    .categories-table {
+    .roles-table {
       .p-datatable-thead > tr > th,
       .p-datatable-tbody > tr > td {
         vertical-align: middle;
@@ -144,17 +144,17 @@ import { EmployeeCategory } from '../../employee-categories.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoriesTableComponent {
+export class RolesTableComponent {
   @ViewChild('dt') dt?: Table;
 
-  @Input() categories: EmployeeCategory[] = [];
+  @Input() roles: EmployeeRole[] = [];
   @Input() loading = false;
 
-  @Output() edit = new EventEmitter<EmployeeCategory>();
-  @Output() delete = new EventEmitter<EmployeeCategory>();
+  @Output() edit = new EventEmitter<EmployeeRole>();
+  @Output() delete = new EventEmitter<EmployeeRole>();
   @Output() selectionChange = new EventEmitter<number[]>();
 
-  selected: EmployeeCategory[] = [];
+  selected: EmployeeRole[] = [];
   mobile = signal(false);
 
   constructor() {
@@ -166,8 +166,8 @@ export class CategoriesTableComponent {
     this.mobile.set(window.innerWidth < 768);
   }
 
-  onSelectionChange(selected: EmployeeCategory[]) {
-    const ids = selected.map(category => category.id);
+  onSelectionChange(selected: EmployeeRole[]) {
+    const ids = selected.map(role => role.id);
     this.selectionChange.emit(ids);
   }
 

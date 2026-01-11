@@ -6,6 +6,7 @@ import { BaseService } from 'src/app/services/base.service';
 
 export interface EmployeeSchedule {
   id: number;
+  uuid: string;
   name: string;
   start_time?: string;
   end_time?: string;

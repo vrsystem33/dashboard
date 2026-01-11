@@ -49,7 +49,7 @@ import { TooltipModule } from 'primeng/tooltip';
           tooltipPosition="bottom"
         ></button>
 
-        <button pButton type="button" label="Todas Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
+        <button pButton type="button" label="Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
       </ng-template>
 
       <ng-template #end>

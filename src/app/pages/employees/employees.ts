@@ -7,13 +7,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 
+import { ToastService } from '@app/services/toast.service';
 import { EmployeesService } from './employees.service';
 import { EmployeesTableComponent } from './components/employee-table';
 import { EmployeeDialogComponent } from './components/employee-dialog';
 import { EmployeeFiltersComponent } from './components/employee-filters';
-import { EmployeeCategoriesService, EmployeeCategory } from './employee-categories.service';
+import { EmployeeRolesService, EmployeeRole } from './employee-roles.service';
 import { EmployeeCreateRequestDto, EmployeeRow, EmployeeUpdateRequestDto } from './employees.models';
-import { ToastService } from '@app/services/toast.service';
+import { EmployeeSchedule, EmployeeSchedulesService } from './employee-schedules.service';
 
 @Component({
   selector: 'app-employees',
@@ -59,7 +60,8 @@ import { ToastService } from '@app/services/toast.service';
       <app-employee-dialog
         [visible]="dialogOpen()"
         [employee]="editing()"
-        [categories]="categories()"
+        [roles]="roles()"
+        [schedules]="schedules()"
         (cancel)="closeDialog()"
         (save)="save($event)">
       </app-employee-dialog>
@@ -87,22 +89,26 @@ export class EmployeesPage implements OnInit {
   readonly selection = signal<string[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
-  readonly categories = signal<EmployeeCategory[]>([]);
+  readonly roles = signal<EmployeeRole[]>([]);
+  readonly schedules = signal<EmployeeSchedule[]>([]);
 
   constructor(
     private service: EmployeesService,
-    private categoriesService: EmployeeCategoriesService,
+    private rolesService: EmployeeRolesService,
+    private schedulesService: EmployeeSchedulesService,
     private confirmationService: ConfirmationService,
     private toast: ToastService
   ) {
     this.service.employees$.subscribe(this.employees.set);
     this.service.loading$.subscribe(this.loading.set);
-    this.categoriesService.categories$.subscribe(this.categories.set);
+    this.rolesService.roles$.subscribe(this.roles.set);
+    this.schedulesService.schedules$.subscribe(this.schedules.set);
   }
 
   ngOnInit(): void {
     this.service.load().pipe(take(1)).subscribe();
-    this.categoriesService.load().pipe(take(1)).subscribe();
+    this.rolesService.load().pipe(take(1)).subscribe();
+    this.schedulesService.load().pipe(take(1)).subscribe();
   }
 
   readonly filtered = computed(() => {
