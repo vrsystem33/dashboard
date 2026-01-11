@@ -16,13 +16,13 @@ import { SelectModule } from 'primeng/select';
 import { PanelModule } from 'primeng/panel';
 import { UserCreateRequestDto, UserRow, UserUpdateRequestDto } from '../users.models';
 import { take } from 'rxjs/operators';
-import { CategoryDialogComponent } from '../categories/components/category-dialog';
+import { CategoryDialogComponent } from '../permissions/components/permission-dialog';
 import {
   UserCategoriesService,
   UserCategory,
   UserCategoryCreateRequestDto,
   UserCategoryUpdateRequestDto
-} from '../user-categories.service';
+} from '../user-permissions.service';
 import { ToastService } from '@app/services/toast.service';
 
 @Component({

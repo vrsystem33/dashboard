@@ -39,7 +39,7 @@ import { Menu, MenuModule } from 'primeng/menu';
 
         <button pButton class="mr-4" label="Novo Usuário" icon="pi pi-plus" (click)="create.emit()"></button>
 
-        <button pButton type="button" label="Categorias" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openCategories()"></button>
+        <button pButton type="button" label="Permissões" icon="pi pi-tags" class="p-button-outlined shrink-0" (click)="this.openPermissions()"></button>
       </ng-template>
 
       <ng-template #end>
@@ -102,9 +102,9 @@ export class UserFiltersComponent {
 
   mobileActions = [
     {
-      label: 'Categorias',
+      label: 'Permissões',
       icon: 'pi pi-tags',
-      command: () => this.openCategories()
+      command: () => this.openPermissions()
     },
     {
       label: 'Exportar CSV',
@@ -149,7 +149,7 @@ export class UserFiltersComponent {
     this.actionsMenu.toggle(event);
   }
 
-  openCategories() {
-    void this.router.navigate(['/users/categories']);
+  openPermissions() {
+    void this.router.navigate(['/users/permissions']);
   }
 }

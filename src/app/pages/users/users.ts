@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { UsersTableComponent } from './components/users-table';
 import { UserDialogComponent } from './components/user-dialog';
 import { UserFiltersComponent } from './components/user-filters';
-import { UserCategoriesService, UserCategory } from './user-categories.service';
+import { UserCategoriesService, UserCategory } from './user-permissions.service';
 import { UserCreateRequestDto, UserRow, UserUpdateRequestDto } from './users.models';
 import { ToastService } from '@app/services/toast.service';
 

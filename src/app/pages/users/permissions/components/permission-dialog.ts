@@ -17,7 +17,7 @@ import {
   UserCategory,
   UserCategoryCreateRequestDto,
   UserCategoryUpdateRequestDto
-} from '../../user-categories.service';
+} from '../../user-permissions.service';
 
 @Component({
   selector: 'app-category-dialog',
@@ -38,7 +38,7 @@ import {
       [draggable]="false"
       [resizable]="false"
       [closable]="true"
-      [header]="category ? 'Editar Categoria' : 'Nova Categoria'"
+      [header]="category ? 'Editar Permissão' : 'Nova Permissão'"
       (onHide)="cancel.emit()"
     >
       <ng-template #content>

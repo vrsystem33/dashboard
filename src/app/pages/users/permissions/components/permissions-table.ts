@@ -4,7 +4,7 @@ import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DataViewModule } from 'primeng/dataview';
-import { UserCategory } from '../../user-categories.service';
+import { UserCategory } from '../../user-permissions.service';
 
 @Component({
   selector: 'app-categories-table',
@@ -78,7 +78,7 @@ import { UserCategory } from '../../user-categories.service';
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-          <tr><td colspan="5" class="py-10 text-muted-color" style="text-align: center !important;">Nenhuma categoria encontrada</td></tr>
+          <tr><td colspan="5" class="py-10 text-muted-color" style="text-align: center !important;">Nenhuma permissão encontrada</td></tr>
         </ng-template>
       </p-table>
 

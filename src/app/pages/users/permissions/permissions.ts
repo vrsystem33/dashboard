@@ -10,11 +10,11 @@ import {
   UserCategory,
   UserCategoryCreateRequestDto,
   UserCategoryUpdateRequestDto
-} from '../user-categories.service';
+} from '../user-permissions.service';
 import { ToastService } from '@app/services/toast.service';
-import { CategoryFiltersComponent } from './components/category-filters';
-import { CategoriesTableComponent } from './components/categories-table';
-import { CategoryDialogComponent } from './components/category-dialog';
+import { CategoryFiltersComponent } from './components/permission-filters';
+import { CategoriesTableComponent } from './components/permissions-table';
+import { CategoryDialogComponent } from './components/permission-dialog';
 
 @Component({
   selector: 'app-user-categories',
@@ -31,8 +31,8 @@ import { CategoryDialogComponent } from './components/category-dialog';
     <div class="space-y-6">
       <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 class="text-2xl font-semibold">Categorias de Clientes</h1>
-          <p class="text-muted-color">Organize e mantenha as categorias dos seus clientes</p>
+          <h1 class="text-2xl font-semibold">Permissões de Usuários</h1>
+          <p class="text-muted-color">Organize e gerencie as permissões de cada usuário</p>
         </div>
       </div>
 
@@ -131,13 +131,13 @@ export class UserCategoriesPage implements OnInit {
 
     if (isEdit && target?.id) {
       this.service.update(target.id, payload).pipe(take(1)).subscribe(() => {
-        this.toast.success('Sucesso', 'Categoria atualizada');
+        this.toast.success('Sucesso', 'Permissão atualizada');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
     } else {
       this.service.create(payload as UserCategoryCreateRequestDto).pipe(take(1)).subscribe(() => {
-        this.toast.success('Sucesso', 'Categoria criada');
+        this.toast.success('Sucesso', 'Permissão criada');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
@@ -151,7 +151,7 @@ export class UserCategoriesPage implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.service.remove(category.id).pipe(take(1)).subscribe(() => {
-          this.toast.success('Sucesso', 'Categoria removida');
+          this.toast.success('Sucesso', 'Permissão removida');
           this.service.load().pipe(take(1)).subscribe();
         });
       }
@@ -169,7 +169,7 @@ export class UserCategoriesPage implements OnInit {
         if (!ids.length) return;
 
         this.service.removeMany(ids).pipe(take(1)).subscribe(() => {
-          this.toast.success('Sucesso', `${ids.length} categoria(s) removida(s)`);
+          this.toast.success('Sucesso', `${ids.length} item(s) removido(s)`);
           this.selection.set([]);
           if (this.categoriesTable) this.categoriesTable.clearSelection();
           this.service.load().pipe(take(1)).subscribe();

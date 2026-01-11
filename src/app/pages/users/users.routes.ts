@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 
 import { UsersPage } from './users';
-import { UserCategoriesPage } from './categories/categories';
+import { UserCategoriesPage } from './permissions/permissions';
 
 export default [
     { path: '', component: UsersPage },
-    { path: 'categories', component: UserCategoriesPage }
+    { path: 'permissions', component: UserCategoriesPage }
 ] as Routes;
