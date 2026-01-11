@@ -47,17 +47,17 @@ export class EmployeeSchedulesService extends BaseService {
   create(payload: EmployeeScheduleCreateRequestDto): Observable<EmployeeSchedule> {
     this._loading$.next(true);
     return this.post<EmployeeSchedule>(this.resource, payload).pipe(
-      tap(category => this._schedules$.next([...this._schedules$.value, category])),
+      tap(schedule => this._schedules$.next([...this._schedules$.value, schedule])),
       finalize(() => this._loading$.next(false))
     );
   }
 
-  update(id: number, payload: EmployeeScheduleUpdateRequestDto): Observable<EmployeeSchedule> {
+  update(uuid: string, payload: EmployeeScheduleUpdateRequestDto): Observable<EmployeeSchedule> {
     this._loading$.next(true);
-    return this.put<EmployeeSchedule>(`${this.resource}/${id}`, payload).pipe(
+    return this.put<EmployeeSchedule>(`${this.resource}/${uuid}`, payload).pipe(
       tap((updated) => {
-        const next = this._schedules$.value.map(category =>
-          category.id === id ? updated : category
+        const next = this._schedules$.value.map(schedule =>
+          schedule.uuid === uuid ? updated : schedule
         );
         this._schedules$.next(next);
       }),
@@ -65,21 +65,21 @@ export class EmployeeSchedulesService extends BaseService {
     );
   }
 
-  remove(id: number): Observable<void> {
+  remove(uuid: string): Observable<void> {
     this._loading$.next(true);
-    return this.delete<void>(`${this.resource}/${id}`).pipe(
+    return this.delete<void>(`${this.resource}/${uuid}`).pipe(
       tap(() => {
-        this._schedules$.next(this._schedules$.value.filter(category => category.id !== id));
+        this._schedules$.next(this._schedules$.value.filter(schedule => schedule.uuid !== uuid));
       }),
       finalize(() => this._loading$.next(false))
     );
   }
 
-  removeMany(ids: number[]): Observable<{ message: string; deleted: number; }> {
+  removeMany(uuids: string[]): Observable<{ message: string; deleted: number; }> {
     this._loading$.next(true);
     return this.delete<{ message: string; deleted: number; }>(
       `${this.resource}/bulk-delete`,
-      { ids }
+      { uuids }
     ).pipe(
       finalize(() => this._loading$.next(false))
     );

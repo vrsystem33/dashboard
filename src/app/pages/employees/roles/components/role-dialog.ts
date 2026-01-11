@@ -120,7 +120,7 @@ export class RoleDialogComponent implements OnChanges {
         this.form.reset({
           name: '',
           description: '',
-          status: true,
+          status: 1,
         });
       }
     }

@@ -8,6 +8,7 @@ export interface EmployeeRow {
   city?: string | null;
   state?: string | null;
   schedule_id?: string | null;
+  salary?: number | null;
   role_id?: number | null;
   roleName?: string | null;
   roleDescription?: string | null;
@@ -28,6 +29,7 @@ export interface EmployeeCreateRequestDto {
   name: string;
   email: string;
   role_id: number;
+  salary?: number | null;
   status?: boolean;
   schedule_id?: string | null;
   phone?: string | null;

@@ -173,7 +173,7 @@ export class ScheduleDialogComponent implements OnChanges {
           name: '',
           start_time: '',
           end_time: '',
-          status: true,
+          status: 1,
         });
       }
     }

@@ -21,7 +21,7 @@ import { EmployeeSchedule } from '../../employee-schedules.service';
       <p-table
         #dt
         [value]="schedules"
-        dataKey="id"
+        dataKey="uuid"
         [paginator]="true"
         [rows]="10"
         [rowsPerPageOptions]="[10,20,50]"
@@ -157,7 +157,7 @@ export class SchedulesTableComponent {
 
   @Output() edit = new EventEmitter<EmployeeSchedule>();
   @Output() delete = new EventEmitter<EmployeeSchedule>();
-  @Output() selectionChange = new EventEmitter<number[]>();
+  @Output() selectionChange = new EventEmitter<string[]>();
 
   selected: EmployeeSchedule[] = [];
   mobile = signal(false);
@@ -172,8 +172,8 @@ export class SchedulesTableComponent {
   }
 
   onSelectionChange(selected: EmployeeSchedule[]) {
-    const ids = selected.map(schedule => schedule.id);
-    this.selectionChange.emit(ids);
+    const uuids = selected.map(schedule => schedule.uuid);
+    this.selectionChange.emit(uuids);
   }
 
   clearSelection() {

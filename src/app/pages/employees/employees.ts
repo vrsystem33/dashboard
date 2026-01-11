@@ -136,6 +136,7 @@ export class EmployeesPage implements OnInit {
   openEdit(s: EmployeeRow) {
     this.service.getById(s.uuid).pipe(take(1)).subscribe({
       next: (employee) => {
+        console.log("🚀 ~ EmployeesPage ~ openEdit ~ employee:", employee)
         this.editing.set(employee);
         this.dialogOpen.set(true);
       },

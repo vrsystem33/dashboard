@@ -80,7 +80,7 @@ export class EmployeeSchedulesPage implements OnInit {
 
   readonly schedules = signal<EmployeeSchedule[]>([]);
   readonly loading = signal<boolean>(false);
-  readonly selection = signal<number[]>([]);
+  readonly selection = signal<string[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
   constructor(
@@ -107,8 +107,8 @@ export class EmployeeSchedulesPage implements OnInit {
     );
   });
 
-  onSelectionChange(ids: number[]) {
-    this.selection.set(ids ?? []);
+  onSelectionChange(uuids: string[]) {
+    this.selection.set(uuids ?? []);
   }
 
   openCreate() {
@@ -129,15 +129,15 @@ export class EmployeeSchedulesPage implements OnInit {
     const isEdit = !!this.editing();
     const target = this.editing();
 
-    if (isEdit && target?.id) {
-      this.service.update(target.id, payload).pipe(take(1)).subscribe(() => {
-        this.toast.success('Sucesso', 'Categoria atualizada');
+    if (isEdit && target?.uuid) {
+      this.service.update(target.uuid, payload).pipe(take(1)).subscribe(() => {
+        this.toast.success('Sucesso', 'Horário atualizada');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
     } else {
       this.service.create(payload as EmployeeScheduleCreateRequestDto).pipe(take(1)).subscribe(() => {
-        this.toast.success('Sucesso', 'Categoria criada');
+        this.toast.success('Sucesso', 'Horário criada');
         this.dialogOpen.set(false);
         this.service.load().pipe(take(1)).subscribe();
       });
@@ -150,8 +150,8 @@ export class EmployeeSchedulesPage implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.service.remove(schedule.id).pipe(take(1)).subscribe(() => {
-          this.toast.success('Sucesso', 'Categoria removida');
+        this.service.remove(schedule.uuid).pipe(take(1)).subscribe(() => {
+          this.toast.success('Sucesso', 'Horário removida');
           this.service.load().pipe(take(1)).subscribe();
         });
       }
@@ -164,12 +164,12 @@ export class EmployeeSchedulesPage implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        const ids = this.selection();
+        const uuids = this.selection();
 
-        if (!ids.length) return;
+        if (!uuids.length) return;
 
-        this.service.removeMany(ids).pipe(take(1)).subscribe(() => {
-          this.toast.success('Sucesso', `${ids.length} categoria(s) removida(s)`);
+        this.service.removeMany(uuids).pipe(take(1)).subscribe(() => {
+          this.toast.success('Sucesso', `${uuids.length} categoria(s) removida(s)`);
           this.selection.set([]);
           if (this.schedulesTable) this.schedulesTable.clearSelection();
           this.service.load().pipe(take(1)).subscribe();
