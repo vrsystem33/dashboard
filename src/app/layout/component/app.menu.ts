@@ -37,9 +37,9 @@ export class AppMenu {
                             { label: 'menu.customers', icon: 'pi pi-fw pi-users', routerLink: ['/customers'] },
                             { label: 'menu.suppliers', icon: 'pi pi-fw pi-building', routerLink: ['/suppliers'] },
                             { label: 'menu.carriers', icon: 'pi pi-fw pi-truck', routerLink: ['/carriers'] },
-                            { label: 'menu.products', icon: 'pi pi-fw pi-box', routerLink: ['/orders'] },
-                            { label: 'menu.issuers', icon: 'pi pi-fw pi-file', routerLink: ['/orders'] },
-                            { label: 'menu.paymentMethods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/orders'] },
+                            { label: 'menu.products', icon: 'pi pi-fw pi-box', routerLink: ['/assistants'] },
+                            { label: 'menu.issuers', icon: 'pi pi-fw pi-file', routerLink: ['/employees'] },
+                            { label: 'menu.paymentMethods', icon: 'pi pi-fw pi-credit-card', routerLink: ['/payment-methods'] },
                             { label: 'menu.employees', icon: 'pi pi-fw pi-sitemap', routerLink: ['/employees'] },
                             { label: 'menu.users', icon: 'pi pi-fw pi-users', routerLink: ['/users'] },
                         ]
@@ -48,7 +48,7 @@ export class AppMenu {
                         label: 'menu.sales',
                         icon: 'pi pi-fw pi-shopping-bag',
                         items: [
-                            { label: 'menu.counter', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/orders'] },
+                            { label: 'menu.counter', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/sales'] },
                             { label: 'menu.pdv', icon: 'pi pi-fw pi-shop', routerLink: ['/orders'] },
                         ]
                     },

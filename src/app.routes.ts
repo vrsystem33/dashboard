@@ -19,7 +19,7 @@ export const appRoutes: Routes = [
             { path: 'carriers', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
             { path: 'products', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
             { path: 'issuers', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
-            { path: 'payment-methods', loadChildren: () => import('@app/pages/carriers/carriers.routes') },
+            { path: 'payment-methods', loadChildren: () => import('@app/pages/payment-methods/payment-methods.routes') },
             { path: 'employees', loadChildren: () => import('@app/pages/employees/employees.routes') },
             { path: 'users', loadChildren: () => import('@app/pages/users/users.routes') },
 
@@ -27,9 +27,10 @@ export const appRoutes: Routes = [
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') },
             { path: 'settings', component: Settings },
-            // { path: 'customers/categories', loadComponent: () => import('@app/pages/customers/categories/categories').then(m => m.CustomerCategoriesPage) },
-            { path: 'orders', loadComponent: () => import('@app/pages/orders/orders').then(m => m.OrdersPage) },
+            { path: 'sales', loadComponent: () => import('@app/pages/orders/orders').then(m => m.OrdersPage) },
             { path: 'assistants', loadComponent: () => import('@app/pages/assistants/assistants').then(m => m.AssistantsPage) },
+
+            // { path: 'customers/categories', loadComponent: () => import('@app/pages/customers/categories/categories').then(m => m.CustomerCategoriesPage) },
         ],
         canActivate: [AuthGuard]
     },
